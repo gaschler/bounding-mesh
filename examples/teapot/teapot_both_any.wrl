@@ -1,0 +1,23 @@
+#VRML V2.0 utf8
+Transform {
+	children [
+		DEF robot Transform {
+			children [
+				DEF left_robot_link0 Transform {
+					children [
+						Inline {
+							url "teapot.wrl"
+						}
+					]
+				}
+				DEF left_robot_link1 Transform {
+					children [
+						Inline {
+							url "teapot_simplified_any.wrl"
+						}
+					]
+				}
+			]
+		}
+	]
+}
