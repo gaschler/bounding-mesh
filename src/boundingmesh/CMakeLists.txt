@@ -16,6 +16,7 @@ if(COIN_FOUND)
 endif(COIN_FOUND)
 
 if(QHULL_FOUND)
+	add_definitions(-DQHULL_AVAILABLE)
 	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${QHULL_INCLUDE_DIRS})
 else(QHULL_FOUND)
 	message("Not building boundingmesh-convexhull, would need QHULL library.")
