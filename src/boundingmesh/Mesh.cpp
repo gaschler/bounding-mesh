@@ -611,7 +611,7 @@ namespace boundingmesh
 				<< " " << vertices_[i].position_[1]
 				<< " " << vertices_[i].position_[2] << std::endl;
 		}
-		file << "# " << triangles_.size() << " triangles total";	
+		file << "# " << triangles_.size() << " triangles total" << std::endl;	
 		for(unsigned int i = 0; i <triangles_.size(); ++i)
 		{
 			//Obj indices count from 1
