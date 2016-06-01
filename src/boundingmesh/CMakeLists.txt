@@ -67,8 +67,6 @@ set_target_properties(
 	VERSION ${VERSION}
 )
 
-target_link_libraries(boundingmesh ${BOUNDINGMESH_LIBRARIES})
-
 install(
 	FILES ${HDRS} 
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
