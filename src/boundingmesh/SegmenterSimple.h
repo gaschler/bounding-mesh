@@ -1,4 +1,4 @@
-//	Copyright (c) 2013, Andre Gaschler, Quirin Fischer
+//	Copyright (c) 2015, Andre Gaschler, Quirin Fischer
 //	All rights reserved.
 //	
 //	Redistribution and use in source and binary forms, with or without modification,
@@ -22,46 +22,48 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "utils.h"
-#include <iostream>
+#ifndef BOUNDINGMESH_SEGMENTER_SIMPLE_H
+#define BOUNDINGMESH_SEGMENTER_SIMPLE_H
 
-FileFormat getFileFormat(std::string filename)
+#include "Mesh.h"
+#include "Segmenter.h"
+#include "Split.h"
+#include "VoxelSet.h"
+#include "VoxelSubset.h"
+
+namespace boundingmesh
 {
-	std::string file_extension = filename.substr(filename.rfind(".") + 1);	
-
-	if(file_extension == "off")
-		return Off;
-	else if(file_extension == "obj")
-		return Obj;
-	else if(file_extension == "stl")
-		return Stl;
-	else if(file_extension == "wrl")
-		return Wrl;
-	else
+	class SegmenterSimple : public Segmenter
 	{
-		std::cout << "Detected unsupported file format: " << file_extension << std::endl;
-		return Invalid;
-	}
+	public:
+		SegmenterSimple();
+
+		void setMaxPasses(int passes);
+		void setMinVolumeGain(Real min_gain);
+
+		void setMeshWithVoxelSize(std::shared_ptr<Mesh> mesh, Real voxel_size);
+		void setMesh(std::shared_ptr<Mesh> mesh, int min_voxel_count);
+		void compute();
+
+		std::vector< std::shared_ptr<Mesh> > getSegmentation();
+
+	private:
+		int passes_;
+		Real min_gain_;
+
+		Real evaluation_blend_;
+		Real voxel_size_;
+
+		std::shared_ptr<VoxelSet> voxels_;
+		std::vector< VoxelSubset >  subsets_;
+		std::vector< std::shared_ptr<Mesh> >  segmentation_;
+
+		std::vector<Split> generateSplits(const VoxelSubset& subset);
+
+		Real evaluatePartition(const VoxelSubset& previous_set, const std::vector<VoxelSubset>& partition);
+		Real evaluateSubset(const VoxelSubset& subset);
+	};
+
 }
 
-std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename)
-{
-	FileFormat file_format = Invalid;
-
-	std::shared_ptr<boundingmesh::Mesh> mesh = std::make_shared< boundingmesh::Mesh >();
-
-	file_format = getFileFormat(filename);
-	if(file_format == Off)
-		mesh->loadOff(filename);
-	else if(file_format == Obj)
-		mesh->loadObj(filename);
-	else if(file_format == Wrl)
-		mesh->loadWrl(filename);
-	else
-	{
-		std::cout << "Couldn't load mesh from " << filename << std::endl;
-		return NULL;
-	}
-	return mesh;
-}
-
+#endif //BOUNDINGMESH_SEGMENTER_SIMPLE_H

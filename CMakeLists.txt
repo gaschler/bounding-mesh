@@ -5,13 +5,14 @@ include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 
 project(boundingmesh)
-set(VERSION 0.1)
+set(VERSION 0.2)
 add_definitions(-DBOUNDINGMESH_VERSION="${VERSION}")
 
 option(BOUNDINGMESH_VECTORIZE "use faster vectorized math (recommended unless build fails with Eigen errors)" ON)
 if(NOT ${BOUNDINGMESH_VECTORIZE})
 	add_definitions(-DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
 endif()
+
 if(WIN32)
 	add_definitions(
 		-D_CRT_SECURE_NO_WARNINGS
@@ -28,10 +29,14 @@ else()
 	endif()
 endif()
 
+option(USE_EIGENQUADPROG "use QuadProg++ Eigen fork (forces us to LGPL)" ON)
+if(USE_EIGENQUADPROG)
+	add_definitions(
+		-DUSE_EIGENQUADPROG=1
+	)
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
-
-set(CMAKE_VERBOSE_MAKEFILE ON) #Enables Eclipse highlighting
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/src/boundingmesh
@@ -44,7 +49,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 add_subdirectory(src/boundingmesh)
 add_subdirectory(src/boundingmesh-bin)
 add_subdirectory(src/boundingmesh-gui)
-add_subdirectory(src/extras)
 add_subdirectory(src/test)
 
 install(

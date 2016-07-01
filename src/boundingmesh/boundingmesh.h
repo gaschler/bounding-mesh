@@ -27,9 +27,13 @@
 #ifndef BOUNDINGMESH_H
 #define BOUNDINGMESH_H
 
-#include "Primitives.h"
-#include "Mesh.h"
 #include "Decimator.h"
+#include "FileUtils.h"
+#include "Mesh.h"
+#include "Primitives.h"
+#include "SegmenterSimple.h"
+#include "SegmenterDownsampling.h"
+#include "VoxelSet.h"
 
 #endif //BOUNDINGMESH_H
 

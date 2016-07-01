@@ -23,6 +23,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Decimator.h"
+#include "../../thirdparty/EigenQP.h"
 
 #include <limits>
 #include <cmath>
@@ -30,6 +31,7 @@
 #include <iostream>
 #include <Eigen/Eigenvalues> 
 #include <sstream>
+#include <stdexcept>
 
 namespace boundingmesh
 {
@@ -316,7 +318,7 @@ namespace boundingmesh
 		{
 			if(border_vertices == 0 || border_vertices == 2)
 			{
-				bool found_valid = solveConstrainedMinimization(qem, std::vector<Plane>(), std::vector<unsigned int>(), new_point);
+				bool found_valid = solveConstrainedMinimization(qem, std::vector<Plane>(), std::vector<unsigned int>(), direction_, new_point);
 				assert(found_valid);
 			}
 			//For border_vertices == 1 the new point is already found
@@ -376,46 +378,9 @@ namespace boundingmesh
 				return EdgeContraction(edge_index, Vector3::Zero(), std::numeric_limits<Real>::max(), Matrix44::Zero());
 		}
 		
-		//Search for valid minimizer that complies with 0 - 3 constraints
-		bool found = false;
-		Real minimal_cost = std::numeric_limits<Real>::max();
-		int used_m = -1;
-		for(int m = 3; m >= 0; --m)
-		{
-			unsigned int n_subsets = nSubsets(m, constraints.size());
-			std::vector<unsigned int> subset;
-			subset.reserve(m);
-			for(unsigned int i = 0; i < m; ++i)
-				subset.push_back(i);
-			for(unsigned int i = 0; i < n_subsets; ++i)
-			{
-				Vector3 result;
-				bool found_valid = solveConstrainedMinimization(qem, constraints, subset,result);
-				Vector4 result_homogeneous;
-				result_homogeneous << result, 1;
-				if(found_valid)
-				{
-					found = true;
-					Real new_cost = result_homogeneous.transpose() * qem * result_homogeneous;
-					if(new_cost < minimal_cost)// + 1e-16)
-					{
-						minimal_cost = new_cost;
-						new_point = result;
-						used_m = m;
-					}
-				}
-				nextSubset(subset, constraints.size());
-			}
-			if(found)
-				break;
-		}
-		//std::cout << "Used m = " << used_m << std::endl;
+		Real minimal_cost;
+		bool found = solveConstrainedMinimizationInequalities(qem, constraints, direction_, new_point, minimal_cost);
 		
-		if(minimal_cost < -epsilon)//Catch really wrong cases
-		{
-			std::cout << "Bad contraction, negative cost: " << minimal_cost << " index " << edge_index << std::endl << "qem: " << qem << std::endl << "point" << new_point << std::endl;
-			minimal_cost = std::numeric_limits<Real>::max();
-		}
 		if(found)
 			return EdgeContraction(edge_index, new_point, minimal_cost, qem);
 		else
@@ -494,7 +459,7 @@ namespace boundingmesh
 	}
 		
 
-	bool Decimator::solveConstrainedMinimization(const Matrix44& qem, const std::vector<Plane>& constraints, const std::vector<unsigned int>& subset, Vector3& result)
+	bool Decimator::solveConstrainedMinimization(const Matrix44& qem, const std::vector<Plane>& constraints, const std::vector<unsigned int>& subset, DecimationDirection direction, Vector3& result)
 	{
 		//Guess solution for the minimization problem by solving only for a subset of constraints.
 		//Return a bool indicating if the guess is allowed by all constraints.(even then it might be non-optimal)
@@ -558,12 +523,12 @@ namespace boundingmesh
 		bool valid_solution = true;
 		for(unsigned int i = 0; i < constraints.size(); ++i)
 		{
-			if(direction_ == Outward && constraints[i].vector().transpose()*result_homogeneous + epsilon < 0)
+			if(direction == Outward && constraints[i].vector().transpose()*result_homogeneous + epsilon < 0)
 			{
 				valid_solution = false;
 				break;
 			}
-			else if(direction_ == Inward && constraints[i].vector().transpose()*result_homogeneous - epsilon > 0)
+			else if(direction == Inward && constraints[i].vector().transpose()*result_homogeneous - epsilon > 0)
 			{
 				valid_solution = false;
 				break;
@@ -610,7 +575,89 @@ namespace boundingmesh
 		Vector3 result = minimizer.topRows(3);
 		return result;
 	}
-
+	
+	bool Decimator::solveConstrainedMinimizationInequalities(const Matrix44& qem, const std::vector<Plane>& constraints, DecimationDirection direction, Vector3& result, Real& result_cost)
+	{
+#if USE_EIGENQUADPROG
+		Eigen::MatrixXd G = qem.topLeftCorner<3, 3>();
+		Eigen::VectorXd g0 = qem.topRightCorner<3, 1>();
+		Eigen::MatrixXd CE(3, 0);
+		Eigen::MatrixXd ce0(0, 0);
+		Eigen::MatrixXd CI(3, constraints.size());
+		Eigen::MatrixXd ci0(1, constraints.size());
+		for (int i = 0; i < constraints.size(); ++i)
+		{
+			CI.col(i) = constraints[i].normal;
+			ci0(i) = constraints[i].d;
+		}
+		Eigen::VectorXd x(3);
+		try
+		{
+			//TODO: check for inequalities and return false sometimes
+			QP::solve_quadprog(G, g0, CE, ce0, CI, ci0, x);
+		} 
+		catch(const ::std::logic_error& e)
+		{
+			return false;
+		}
+		
+		//result_cost = (x.transpose() * G * x)(0, 0) + 2 * (g0.transpose() * x)(0, 0) + qem(3, 3);
+		Vector4 result_homogeneous;
+		result_homogeneous << x, 1;
+		result_cost = result_homogeneous.transpose() * qem * result_homogeneous;
+		result = x;
+		
+		return true;
+#else
+		//Search for valid minimizer that complies with 0 - 3 constraints
+		bool found = false;
+		Real minimal_cost = std::numeric_limits<Real>::max();
+		int used_m = -1;
+		Vector3 new_point;
+		for(int m = 3; m >= 0; --m)
+		{
+			unsigned int n_subsets = nSubsets(m, constraints.size());
+			std::vector<unsigned int> subset;
+			subset.reserve(m);
+			for(unsigned int i = 0; i < m; ++i)
+				subset.push_back(i);
+			for(unsigned int i = 0; i < n_subsets; ++i)
+			{
+				Vector3 result;
+				bool found_valid = solveConstrainedMinimization(qem, constraints, subset, direction, result);
+				Vector4 result_homogeneous;
+				result_homogeneous << result, 1;
+				if(found_valid)
+				{
+					found = true;
+					Real new_cost = result_homogeneous.transpose() * qem * result_homogeneous;
+					if(new_cost < minimal_cost)// + 1e-16)
+					{
+						minimal_cost = new_cost;
+						new_point = result;
+						used_m = m;
+					}
+				}
+				nextSubset(subset, constraints.size());
+			}
+			if(found)
+				break;
+		}
+		//std::cout << "Used m = " << used_m << std::endl;
+		
+		if(minimal_cost < -epsilon)//Catch really wrong cases
+		{
+			std::cout << "Bad contraction, negative cost: " << minimal_cost << std::endl << "qem: " << qem << std::endl << "point" << new_point << std::endl;
+			minimal_cost = std::numeric_limits<Real>::max();
+		}
+		
+		result_cost = minimal_cost;
+		result = new_point;
+		
+		return found;
+#endif
+	}
+	
 	Vector3 Decimator::minimizeSubspace(const Matrix44& quadratic_cost, Plane plane1, Plane plane2)
 	{
 		Vector3 point_on_p = plane1.normal * (-plane1.d);

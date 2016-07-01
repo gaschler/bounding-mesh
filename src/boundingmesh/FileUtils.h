@@ -22,31 +22,24 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+
+#ifndef BOUNDINGMESH_FILEUTILS_H
+#define BOUNDINGMESH_FILEUTILS_H
+
 #include <boundingmesh.h>
-#include <iostream>
-#include "utils.h"
-#include "measuring.h"
+#include <memory>
 
-const double error = 0.001;
-
-int main(int argc, char** argv)
+namespace boundingmesh
 {
-	if(argc != 2)
-		std::cout << "Usage: " << argv[0] << " [Mesh File]" << std::endl;
+enum FileFormat
+{
+	Invalid, Off, Obj, Stl, Wrl
+};
 
-	::std::shared_ptr< boundingmesh::Mesh > mesh = loadMesh(std::string(argv[1]));
-	boundingmesh::Decimator decimator;
-	decimator.setMaximumError(error);
-	decimator.setMesh(*mesh);
-	::std::shared_ptr< boundingmesh::Mesh > result_mesh = decimator.compute();
-	SolidObject solid_object = createSolidMesh(*mesh);
-	double distance = getMeshDistance(solid_object, *result_mesh);
+FileFormat getFileFormat(std::string filename);
 
-	std::cout << "Simplified " << argv[0] << " to error " << error << ", got distance " << distance << std::endl;
-	deleteSolidObject(solid_object);
-
-	if(distance > error)
-		return 1;
-	else
-		return 0;
+std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename, bool debugOutput = true);
 }
+
+#endif //BOUNDINGMESH_FILEUTILS_H

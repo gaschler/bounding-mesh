@@ -2,10 +2,8 @@ project(boundingmesh-lib)
 
 find_package(Eigen 3 REQUIRED)
 find_package(Coin)
-#find_package(GMP REQUIRED)
-#find_package(CGAL)
-#set(QHULL_USE_STATIC True)
-find_package(QHULL)
+find_package(CGAL)
+find_package(GMP)
 
 #${CGAL_INCLUDE_DIRS} ${GMP_INCLUDE_DIRS}
 set(BOUNDINGMESH_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
@@ -15,12 +13,13 @@ if(COIN_FOUND)
 	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${COIN_INCLUDE_DIRS})
 endif(COIN_FOUND)
 
-if(QHULL_FOUND)
-	add_definitions(-DQHULL_AVAILABLE)
-	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${QHULL_INCLUDE_DIRS})
-else(QHULL_FOUND)
-	message("Not building boundingmesh-convexhull, would need QHULL library.")
-endif(QHULL_FOUND)
+if (CGAL_FOUND)
+	add_definitions(-DCGAL_AVAILABLE -DCGAL_DISABLE_ROUNDING_MATH_CHECK)
+	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${CGAL_INCLUDE_DIRS})
+	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${GMP_INCLUDE_DIR})
+else(CGAL_FOUND)
+	message("Not building approximate domain decomposition, would need CGAL library.")	
+endif(CGAL_FOUND)
 
 set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} PARENT_SCOPE)
 
@@ -28,24 +27,45 @@ include_directories(
 	${BOUNDINGMESH_INCLUDE_DIRS}
 )
 
+set(
+	SRCS
+	ContractionUtils.cpp
+	Decimator.cpp
+	FileUtils.cpp
+	Mesh.cpp
+	MetricGenerator.cpp
+	Primitives.cpp
+	SegmenterDownsampling.cpp
+	SegmenterSimple.cpp
+	Split.cpp
+	VoxelSet.cpp
+	VoxelSubset.cpp
+)
+
+if(USE_EIGENQUADPROG)
+	list(APPEND SRCS ../../thirdparty/EigenQP.cpp)
+endif()
+
 add_library(
 	boundingmesh
 	STATIC
-	Primitives.cpp
-	Mesh.cpp
-	Decimator.cpp
-	MetricGenerator.cpp
-	ContractionUtils.cpp
+	${SRCS}
 )
 
 set(
 	HDRS
 	boundingmesh.h
-	Primitives.h
-	Mesh.h
-	Decimator.h
-	MetricGenerator.h
 	ContractionUtils.h
+	Decimator.h
+	FileUtils.h
+	Mesh.h
+	MetricGenerator.h
+	Primitives.h
+	Segmenter.h
+	SegmenterDownsampling.h
+	SegmenterSimple.h
+	Split.h
+	VoxelSubset.h
 )
 
 set(BOUNDINGMESH_LIBRARIES boundingmesh)
@@ -54,9 +74,10 @@ if(COIN_FOUND)
 	set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${COIN_LIBRARIES})
 endif(COIN_FOUND)
 
-if(QHULL_FOUND)
-	set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${QHULL_LIBRARIES})
-endif(QHULL_FOUND)
+if(CGAL_FOUND)
+	set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${CGAL_LIBRARIES})
+endif(CGAL_FOUND)
+set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${GMP_LIBRARIES})
 
 
 set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} PARENT_SCOPE)

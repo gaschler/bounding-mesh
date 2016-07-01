@@ -33,6 +33,7 @@ namespace boundingmesh
 	typedef double Real;
 	typedef Eigen::Matrix<Real, 3, 1> Vector3;
 	typedef Eigen::Matrix<Real, 4, 1> Vector4;
+	typedef Eigen::Matrix<Real, 3, 3> Matrix33;
 	typedef Eigen::Matrix<Real, 4, 4> Matrix44;
 	typedef unsigned int Index;
 

@@ -24,12 +24,11 @@
 
 //boundingmesh executable
 
+#include <boundingmesh.h>
+#include "../../thirdparty/optionparser.h"
+
 #include <iostream>
 #include <sstream>
-#include <boundingmesh.h>
-#include "optionparser.h"
-#include "utils.h"
-
 
 option::ArgStatus checkDirection(const option::Option& option, bool msg)
 {
@@ -196,7 +195,8 @@ int main(int argc, char** argv)
 	else
 	{
 		std::cout << "Expected filename(s)." << std::endl;
-		return 0;
+		option::printUsage(std::cout, usage);
+		return 1;
 	}
 
 	boundingmesh::Real maximum_error = std::numeric_limits<boundingmesh::Real>::max();
@@ -208,30 +208,30 @@ int main(int argc, char** argv)
 	}
 
 	boundingmesh::Mesh mesh;
-	FileFormat file_format_in = Invalid;
-	FileFormat file_format_out = Invalid;
+	boundingmesh::FileFormat file_format_in = boundingmesh::Invalid;
+	boundingmesh::FileFormat file_format_out = boundingmesh::Invalid;
 	
-	file_format_in = getFileFormat(filename_in);
-	file_format_out = getFileFormat(filename_out);
+	file_format_in = boundingmesh::getFileFormat(filename_in);
+	file_format_out = boundingmesh::getFileFormat(filename_out);
 	
 	
-	if(file_format_in == Off)
+	if(file_format_in == boundingmesh::Off)
 		mesh.loadOff(filename_in);
-	else if(file_format_in == Obj)
+	else if(file_format_in == boundingmesh::Obj)
 		mesh.loadObj(filename_in);
-	else if(file_format_in == Wrl)
+	else if(file_format_in == boundingmesh::Wrl)
 	{
 		if(options[WHICH_FACESET])
 			mesh.loadWrl(filename_in, atoi(options[WHICH_FACESET].arg));
 		else
 			mesh.loadWrl(filename_in);
 	}
-	else if(file_format_in == Stl)
+	else if(file_format_in == boundingmesh::Stl)
 		mesh.loadStl(filename_in);
 	else
 	{
 		std::cout << "Couldn't load " << filename_in << std::endl;
-		return 0;
+		return 1;
 	}
 	
 	
@@ -257,11 +257,11 @@ int main(int argc, char** argv)
 	decimator.setMesh(mesh);
 	::std::shared_ptr< boundingmesh::Mesh > result_mesh = decimator.compute();
 	
-	if(file_format_out == Off)
+	if(file_format_out == boundingmesh::Off)
 		result_mesh->writeOff(filename_out);
-	else if(file_format_out == Obj)
+	else if(file_format_out == boundingmesh::Obj)
 		result_mesh->writeObj(filename_out);
-	else if(file_format_out == Wrl)
+	else if(file_format_out == boundingmesh::Wrl)
 	{
 		if(options[COLORED])
 			result_mesh->writeWrl(filename_out, true);
@@ -269,12 +269,12 @@ int main(int argc, char** argv)
 			result_mesh->writeWrl(filename_out);
 		
 	}
-	else if(file_format_out == Stl)
+	else if(file_format_out == boundingmesh::Stl)
 		result_mesh->writeStl(filename_out, false);
 	else
 	{
 		std::cout << "Couldn't write " << filename_out << std::endl;
-		return 0;
+		return 1;
 	}
 
 	return 0;

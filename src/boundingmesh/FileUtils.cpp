@@ -22,48 +22,50 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <boundingmesh.h>
-#include <sstream>
+#include "FileUtils.h"
 #include <iostream>
 
-int main(int argc, char** argv)
+namespace boundingmesh
 {
-	if(argc != 2)
-		return 1;
-	std::cout << "Testfig " << argv[1] << std::endl;
 
-	boundingmesh::Mesh bunny;
-	bunny.loadOff(std::string(argv[1]) + "/bunny/bunny.off");
-
-	boundingmesh::Mesh teapot;
-	teapot.loadOff(std::string(argv[1]) + "/teapot/teapot.off");
-
-	boundingmesh::Decimator decimator;
-	std::stringstream sstream;
-	::std::shared_ptr< boundingmesh::Mesh > decimated;
-	double error = 0.00000001;
-	decimator.setMesh(bunny);
-	for(unsigned int i = 0; i < 8; ++i )
+	FileFormat getFileFormat(std::string filename)
 	{
-		decimator.setMaximumError(error);
-		decimated = decimator.compute();
-		sstream.str("");
-		sstream << "bunny_e-" << (8 - i) << ".wrl";
-		decimated->writeWrl(sstream.str());
-		error *= 10;
-	}
-	
-	error = 0.00000001;
-	decimator.setMesh(teapot);
-	for(unsigned int i = 0; i < 8; ++i )
-	{
-		decimator.setMaximumError(error);
-		decimated = decimator.compute();
-		sstream.str("");
-		sstream << "teapot_e-" << (8 - i) << ".wrl";
-		decimated->writeWrl(sstream.str());
-		error *= 10;
+		std::string file_extension = filename.substr(filename.rfind(".") + 1);
+
+		if (file_extension == "off")
+			return Off;
+		else if (file_extension == "obj")
+			return Obj;
+		else if (file_extension == "stl")
+			return Stl;
+		else if (file_extension == "wrl")
+			return Wrl;
+		else
+		{
+			std::cout << "Detected unsupported file format: " << file_extension << std::endl;
+			return Invalid;
+		}
 	}
 
-	return 0;
+	std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename, bool debugOutput)
+	{
+		FileFormat file_format = Invalid;
+
+		std::shared_ptr<boundingmesh::Mesh> mesh = std::make_shared<boundingmesh::Mesh>();
+
+		file_format = getFileFormat(filename);
+		if (file_format == Off)
+			mesh->loadOff(filename);
+		else if (file_format == Obj)
+			mesh->loadObj(filename);
+		else if (file_format == Wrl)
+			mesh->loadWrl(filename, -1, debugOutput);
+		else
+		{
+			std::cout << "Couldn't load mesh from " << filename << std::endl;
+			return NULL;
+		}
+		return mesh;
+	}
+
 }

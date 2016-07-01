@@ -43,8 +43,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "optionparser.h"
-#include "utils.h"
+#include "../../thirdparty/optionparser.h"
 
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/nodes/SoPolygonOffset.h>
@@ -128,15 +127,15 @@ void MainWindow::loadView()
 bool MainWindow::openFile(const std::string &filename_in)
 {
 	mesh.reset(new boundingmesh::Mesh);
-	FileFormat file_format_in = Invalid;
-	file_format_in = getFileFormat(filename_in);
-	if(file_format_in == Off)
+	boundingmesh::FileFormat file_format_in = boundingmesh::Invalid;
+	file_format_in = boundingmesh::getFileFormat(filename_in);
+	if(file_format_in == boundingmesh::Off)
 		mesh->loadOff(filename_in);
-	else if(file_format_in == Obj)
+	else if(file_format_in == boundingmesh::Obj)
 		mesh->loadObj(filename_in);
-	else if(file_format_in == Wrl)
+	else if(file_format_in == boundingmesh::Wrl)
 		mesh->loadWrl(filename_in);
-	else if(file_format_in == Stl)
+	else if(file_format_in == boundingmesh::Stl)
 		mesh->loadStl(filename_in);
 	else
 	{
@@ -187,16 +186,16 @@ void MainWindow::clickSave()
 	std::string filename_out = QFileDialog::getSaveFileName(this, "Save 3D Mesh", QDir::currentPath(), "*.wrl *.obj *.off *.stl").toStdString();
 	if(filename_out == "")
 		return;
-	FileFormat file_format_out = Invalid;
-	file_format_out = getFileFormat(filename_out);
+	boundingmesh::FileFormat file_format_out = boundingmesh::Invalid;
+	file_format_out = boundingmesh::getFileFormat(filename_out);
 	boundingmesh::Mesh copy = *(this->mesh);
-	if(file_format_out == Off)
+	if(file_format_out == boundingmesh::Off)
 		copy.writeOff(filename_out);
-	else if(file_format_out == Obj)
+	else if(file_format_out == boundingmesh::Obj)
 		copy.writeObj(filename_out);
-	else if(file_format_out == Wrl)
+	else if(file_format_out == boundingmesh::Wrl)
 		copy.writeWrl(filename_out);
-	else if(file_format_out == Stl)
+	else if(file_format_out == boundingmesh::Stl)
 		copy.writeStl(filename_out, false);
 	else
 	{
@@ -339,7 +338,7 @@ void MainWindow::clickDecimateVertices()
 	}
 	if(!using_error_restriction_)
 		decimator->unsetMaximumError();
-	unsigned int step = 1000;
+	unsigned int step = ::std::max(1, (int) mesh->nVertices() / 100);
 	while(mesh->nVertices() > vertices + step && decimator->nextError() < maximum_error)
 	{
 		decimator->setTargetVertices(mesh->nVertices() - step);
@@ -699,7 +698,7 @@ MainWindow::MainWindow(QWidget* parent, QApplication* app) :
 	
 	SoGroup *group_decimated = new SoGroup;
 	SoMaterial *material_decimated = new SoMaterial;
-	material_decimated->diffuseColor.setValue(1.0, 1.0, 1.0);
+	material_decimated->diffuseColor.setValue(0.0, 0.0, 0.0);
 	group_decimated->addChild(material_decimated);
 	viewer_mesh.reset(new ViewerMesh);
 	viewer_mesh->setWireframe(true);
@@ -721,12 +720,13 @@ MainWindow::MainWindow(QWidget* parent, QApplication* app) :
 
 
 	viewer = new SoQtExaminerViewer(&viewer_widget);
-	viewer->setDecoration(false);
+	//viewer->setDecoration(true);
+	viewer->setBackgroundColor(SbColor(255, 255, 255));
 	viewer->setTransparencyType(SoGLRenderAction::SORTED_OBJECT_BLEND);
 	viewer->setDrawStyle(SoQtViewer::STILL, SoQtViewer::VIEW_AS_IS);
 	viewer->setDrawStyle(SoQtViewer::INTERACTIVE, SoQtViewer::VIEW_SAME_AS_STILL);
 	viewer->setSceneGraph(scene_graph);
-	viewer->setHeadlight(TRUE);	
+	viewer->setHeadlight(TRUE);
 	setFocusProxy(this->viewer->getWidget());
 	
 	resize(1120, 630);

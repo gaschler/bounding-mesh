@@ -1,30 +1,34 @@
 # Boundingmesh
 
-Contributors: Andre Gaschler, Quirin Fischer
-License: 2-clause BSD, a permissive license, see LICENSE file; see [License](#license) for details of linked libraries
+Contributors: Andre Gaschler, Quirin Fischer, Philipp Gergen
 
-Boundingmesh is a mesh simplification tool aimed at applications performing collision analysis. It reduces mesh complexity while guaranteeing that the mesh will not shrink.
+License: 2-clause BSD, a permissive license, see LICENSE file; see [License](#license) for details of linked libraries.
+Several features require more restrictive licenses.
+
+Boundingmesh is a library and tool set for generating *bounding meshes and
+ bounding convex decompositions*.
+A bounding mesh encloses a given mesh and has fewer vertices; it
+ is single-sided approximate mesh.
+A bounding convex decomposition is a set of convex hulls of few vertices
+that enclose a given mesh.
 
 ## Table of Contents
 *   [Overview](#overview)
     *  [Features](#features)
+    *  [Publications](#publications)
     *  [Screenshots](#screenshots)
         * [GUI](#gui)
+        * [Bounding Convex Decomposition](#bounding-convex-decomposition)
     *  [Example Models](#example-models)
 *   [Usage](#usage)
 	*  [License](#license)
     *  [Installation](#installation)
         * [Building from Source](#building-from-source)
         * [Binaries](#binaries)
-    *  [Command-Line Tool](#command-line-tool)
-        * [Arguments](#arguments)
-        * [Options](#options)
+    *  [Command-Line Tools](#command-line-tools)
     *  [GUI Application](#gui-application)
         * [Linux Build](#linux-build)
         * [Windows Build](#windows-build)
-    *  [Extras](#extras)
-        * [Voxelize](#voxelize)
-        * [Approximate Convex Decomposition](#approximate-convex-decomposition-1)
     *  [Static Library](#static-library)
 *   [Code-Guide](#code-guide)
     *  [Data Structures](#data-structures)
@@ -35,31 +39,19 @@ Boundingmesh is a mesh simplification tool aimed at applications performing coll
         *  [boundingmesh-bin/main.cpp](#boundingmesh-binmaincpp)
     *  [Graphical User Interface](#graphical-user-interface)
         *  [boundingmesh-gui/gui.h](#boundingmesh-guiguih)
-            *  [class MainWindow](#class-mainwindow)
-            *  [class CustomLineEdit](#class-customlineedit)
         *  [boundingmesh-gui/ViewerMesh.h](#boundingmesh-guiviewermeshh)
-            *  [class ViewerMesh](#class-viewermesh)
     *  [Core Library](#core-library)
         *  [boundingmesh/boundingmesh.h](#boundingmeshboundingmeshh)
         *  [boundingmesh/Primitives.h](#boundingmeshprimitivesh)
-            * [class Plane](#class-plane)
-            * [class Vertex](#class-vertex)
-            * [class Edge](#class-edge)
-            * [class Triangle](#class-triangle)
         *  [boundingmesh/Mesh.h](#boundingmeshmeshh)
-            * [class VertexPosition](#class-vertexposition)
-            * [class VertexPositionSet](#class-vertexpositionset)
-            * [class Mesh](#class-mesh)
         *  [boundingmesh/ContractionUtils.h](#boundingmeshcontractionutilsh)
-            * [class EdgeContraction](#class-edgecontraction)
-            * [class ContractionIndex](#class-contractionindex)
-            * [class ContractionQueue](#class-contractionqueue)
         *  [boundingmesh/Decimator.h](#boundingmeshdecimatorh)
-            * [class Decimator](#class-decimator)
         *  [boundingmesh/MetricGenerator.h](#boundingmeshmetricgeneratorh)
-            * [class MetricGenerator](#class-edgecontraction)
+        *  [boundingmesh/VoxelSet.h](#boundingmeshvoxelseth)
+        *  [boundingmesh/SegmenterSimple.h](#boundingmeshsegmenterh)
 
 ## Overview
+
 
 ### Features
 
@@ -73,11 +65,40 @@ Boundingmesh is a mesh simplification tool aimed at applications performing coll
 *   Supports multiple algorithms to estimate the simplification error.
 *   Interactive GUI
 
+Bounding convex decomposition:
+*   Generate a set of convex bodies to approximate a mesh
+*   Algorithms operate on a voxel representation
+*   Greedy splitting along axis-aligned planes (inspired by [V-HACD](https://github.com/kmammou/v-hacd))
+*   Make sure the convex bodies enclose the entire original mesh
+(in contrast to [V-HACD](https://github.com/kmammou/v-hacd) or other *approximate*
+convex decomposition algorithms)
+
+### Publications
+Feel free to cite our publications:
+
+*   Andre K. Gaschler.
+[Efficient Geometric Predicates for Integrated Task and Motion Planning](http://www6.in.tum.de/Main/Publications/GaschlerPhd.pdf).
+Dissertation, Technische Universität München, Munich, Germany, 2016
+*   Andre Gaschler, Quirin Fischer, and Alois Knoll.
+[The bounding mesh algorithm](http://www6.in.tum.de/Main/Publications/Gaschler2015d.pdf).
+Technical Report TUM-I1522, Technische Universität München, Germany, June 2015.
+
+
 ### Screenshots
 
 #### GUI
 ![The GUI interface.](https://github.com/Zera-/bounding-mesh/raw/master/images/ScreenshotGUI.png)
 ![After some simplification.](https://github.com/Zera-/bounding-mesh/raw/master/images/ScreenshotGUIdecimated.png)
+
+#### Bounding Convex Decomposition
+Original model:
+![Original teapot model](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot.png)
+Convex hull:
+![Convex hull](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_hull.png)
+Voxel set:
+![Voxelized model](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_voxelized.png)
+Bounding convex decomposition:
+![Bounding convex decomposition](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_decomposed.png)
 
 ### Example Models
 
@@ -88,8 +109,18 @@ The model in `/examples/bunny/` originates from [The Stanford 3D Scanning Reposi
 ## Usage
 
 ### License
-Boundingmesh itself is under the permissive 2-clause BSD license. However, it may use the following open source software libraries, which have other licenses: [Eigen](http://eigen.tuxfamily.org/), [Coin3D](https://bitbucket.org/Coin3D/coin/wiki/Home),
-[Qt](https://www.qt.io/licensing/), [SOLID](http://dtecta.com/licence/index.html), [SoQt](https://bitbucket.org/Coin3D/soqt), [CGAL](http://www.cgal.org/license.html). Please find their source code and licenses on their respective websites.
+Boundingmesh itself is under the permissive 2-clause BSD license.
+However, it may use the following open source software libraries,
+which have other licenses: [Eigen](http://eigen.tuxfamily.org/),
+[EigenQP](https://github.com/wingsit/QP),
+[Coin3D](https://bitbucket.org/Coin3D/coin/wiki/Home),
+[Qt](https://www.qt.io/licensing/), [SOLID](http://dtecta.com/licence/index.html),
+[SoQt](https://bitbucket.org/Coin3D/soqt), [CGAL](http://www.cgal.org/license.html).
+Please find their source code and licenses on their respective websites.
+By default, EigenQP is compiled into Boundingmesh and LGPL applies unless
+you deactivate the option `USE_EIGENQUADPROG`.
+For instance, if you compile convex decomposition,
+CGAL components are linked whose GPL license applies to the rest of the code.
 
 ### Installation
 
@@ -97,6 +128,7 @@ Boundingmesh itself is under the permissive 2-clause BSD license. However, it ma
 We rely on the linear algebra library [Eigen](http://eigen.tuxfamily.org/) for most computations.  
 If you perform loading of `.wrl` files, you also need the [Coin3D](https://bitbucket.org/Coin3D/coin/wiki/Home) toolkit.  
 The included GUI application also requires __QT4__ and __SoQT4__.  
+The modules involving convex bodies rely on [QHull](http://www.qhull.org/) and [CGAL](http://www.cgal.org/).
 
 #### Building from Source
 We provide a CMake build file. We recommend building by
@@ -106,17 +138,19 @@ We provide a CMake build file. We recommend building by
     cmake ..
     make
 
-### Command-Line Tool
-Boundingmesh provides an executable file to be used from the command-line. The interface is as follows:
+#### Binaries
+Windows binaries may be included in the [releases](https://github.com/gaschler/bounding-mesh/releases).
+
+### Command-Line Tools
+
+#### Bounding Mesh Simplification
+Bounding meshes can be generated with a command-line executable. The interface is as follows:
 
     ./boundingmesh [options] FilenameIn [FilenameOut]
-
-#### Arguments
 
 *   FileIn (required): The path of the mesh file thats is to be simplified. The filename extension has to indicate one of the supported file formats `.off`, `.obj`, `.stl` or `.wrl`. Loading `.wrl` files requires the Coin library to be available.
 *   FileOut (optional): The path where the resulting mesh will be stored. The filename extension determines the written format that has to be one of `.off`, `.obj`, `.stl` or `.wrl`. Defaults to `boundingmesh_[FileIn]`.
 
-#### Options
 *   --direction, -d: Direction of the simplification. `Inward`, `Outward` or `Any`.
 *   --vertices, -v: The target number of vertices. 
 *   --error, -e: The maximum error an edge contraction may introduce.
@@ -124,6 +158,18 @@ Boundingmesh provides an executable file to be used from the command-line. The i
 *   --init, -i: The initialization algorithm of merge-based algorithms. Available choices: `Midpoint`, `DistancePrimitives`. 
 *   --faceset: If the input format is .wrl, only the faceset with this number is loaded. Supply the index as an 0-indexed integer.
 *   --colored: If the output format is .wrl, disconnected submeshes will be assigned distinct colors. No arguments taken.
+
+#### Bounding Convex Decomposition
+Bounding convex decompositions can be generated with the following command-line executable:
+
+    ./bounding-convex-decomposition [options] filename [filename_out.wrl]
+
+*   filename: Input file may be of type .off, .obj, .stl or .wrl
+*   --voxels, -x: Number of voxels to be used, a good value is 200000. Higher numbers increase quality and computation time.
+*   --alpha, -a: Parameter alpha, default is 1. Increases the number of splits into convex bodies.
+*   --error, -e: The maximum error that may be introduced by the bounding mesh post-processing step.
+Relative to the bounding box diagonal length. (Convex decomposition usually introduces a much
+higher error than the bounding mesh approximation.)
 
 ### GUI Application
 
@@ -153,10 +199,6 @@ on the [Robotics Library Website](http://roboticslibrary.org).
 Boundingmesh requires a subset of the dependencies the 
 Robotics Library requires, so the build instructions from there
 apply to large extent.
-
-### Extras
-
-Besides the main command-line tool, additional exectuables provide access to other capabilities of the boundingmesh library.
 
 ### Static Library
 
@@ -203,6 +245,12 @@ The core decimation algorithm is located in `Decimator::compute()` and just repe
 The modification of the mesh is done in `Decimator::executeEdgeContraction()`. This method uses information about which parts have to be removed or reconnected collected in `Decimator::collectRemovalData()`.  
 The scoring of contractions (and simultaneously the selection of inserted points) is done in `Decimator::computeEdgeContraction()` by minimizing cost functions. A cost function is represented by a matrix, which is computed in the [`MetricGenerator`](#boundingmeshmetricgeneratorh) class depending on the settings.
 
+### Convex Decomposition
+
+The convex decomposition algorithm starts by rasterizing the mesh into a voxel model or `VoxelSet`.  
+The voxel set is then repeatedly divided by collecting the voxels on the two sides of a plane into different subsets (methods `SegmenterSimple::compute()` and `VoxelSubset::partition()`).
+The resulting subsets of voxels are then used to generate convex bodies, by collecting the points of the mesh that produced the voxels (method `VoxelSubset::calculateConvexHull()`).
+
 ## Documentation
 
 The whole library is contained in the namespace `boundingmesh`. Add it to your program by including `boundingmesh.h` and linking against `libboundingmesh.a`.  
@@ -240,36 +288,6 @@ declares callback functions for active components.
 
 *   `void reload()`  
     Updates current vertex count and error. Also recalculates the recommendation fields and checks button states.
-
-*   `void clickOpen()`  
-    `void clickOpenExample(const std::string &file_name)`  
-    `void clickOpenExample1()`  
-    `void clickOpenExample2()`  
-    `void clickOpenExample3()`  
-    `void clickSave()`  
-    `void clickReset()`  
-    `void clickOuter()`  
-    `void clickInner()`  
-    `void clickAny()`  
-    `void clickClassicQEM()`  
-    `void clickModifiedQEM()`  
-    `void clickMinConstant()`  
-    `void clickDiagonalization()`  
-    `void clickAverage()`  
-    `void clickMidpoint()`  
-    `void clickDistancePrimitives()`  
-    `void clickDecimate()`  
-    `void clickDecimateMany()`  
-    `void clickDecimateManyMore()`  
-    `void clickDecimateVertices()`  
-    `void clickDecimateError()`  
-    `void clickDecimatedSolid()`  
-    `void clickDecimatedWire()`  
-    `void clickDecimatedInvis()`  
-    `void clickOriginalSolid()`  
-    `void clickOriginalWire()`  
-    `void clickOriginalInvis()`  
-    Event handlers for all GUI interactions.
 
 ##### `class CustomLineEdit`
 Modified LineEdit that inserts a default value when empty.
@@ -662,3 +680,156 @@ Produces quadratic error metrices for use by the Decimator. Allows selection of 
     Implementation of Diagonalization merging. Computes a diagonal bound for each matrix, merges these.
 *   `Matrix44 mergeAverage(Matrix44 a, Matrix44 b)`  
     Merges the matrices by computing their average.
+
+#### `boundingmesh/VoxelSet.h`
+##### `enum Metric`
+List of possible voxel types.
+* `INNER`: Added to fill the inner volume.  
+* `SURFACE`: A voxel generated by a triangle of the mesh.  
+
+##### `class Voxel`
+Stores data for one voxel, currently position, type and triangles that created the voxel.
+
+###### Creation
+*   `Voxel(Index x, Index y, Index z, VoxelType type)`  
+    Create a voxel of certain type at some position. 
+*   `void addTriangle(Index triangle)`  
+    Add a triangle to a vertain voxel.
+
+###### Getter Methods
+*   `Index x() const`  
+*   `Index y() const`  
+*   `Index z() const`  
+    Get the coordinates of the voxel's position.
+*   `Index coordinate(int dimension) const`  
+    Get the coordinate by dimension, 0->X, 1->Y, 2->Z.
+*   `VoxelType type() const`  
+    Type of the voxel.
+*   `unsigned int nTriangles() const`  
+    Number of triangles intersecting the voxel.
+*   `Index triangle(unsigned int i) const`  
+    Returns the index of the ith triangle associated with the voxel.
+
+##### `class VoxelSet`
+A set of voxels, the equivalent of a mesh.
+###### Creation 
+*   `VoxelSet(std::shared_ptr<Mesh> triangle_mesh, Real voxel_size)`  
+    Creates a voxel set by rasterizing a mesh. The grid resolution is chosen according to the mesh size (it's bounding box) and the selected voxel size.
+
+###### Getters
+*   `unsigned int nVoxels() const`  
+*   `const Voxel& voxel(unsigned int i) const`  
+*   `const Vector3& origin() const`  
+*   `Real voxelSize() const`  
+*   `unsigned int resolution(int dimension) const`  
+*   `std::shared_ptr<Mesh> mesh() const`  
+*   `int voxelAt(unsigned int x, unsigned int y, unsigned int z)`  
+*   `Vector3 computePosition(const Voxel& voxel) const`  
+
+###### Others
+*   `void addVoxel(const Voxel& voxel)`  
+    Add a voxel to the set.
+*   `void writeWRL(std::string filename)`  
+    Generate a VRML file to display the voxel set. Coloring dependent on voxel type.
+
+###### Internal data structures
+*   `std::vector<Voxel> voxels_`  
+    Set of all filled voxels.
+*   `std::vector<int> grid_`  
+    Field of size `resolution(0)*resolution(1)*resolution(2)`, storing the index of the voxel for a certain position.
+
+#### `boundingmesh/SegmenterSimple.h`
+Classes for the segmentation of a model into disjoint parts, especially for convex decomposition.
+
+##### `class Split`
+A splitting plane, currently axis aligned and at a voxel boundary.
+
+*   `Split(int dimension, int index)`  
+
+*   `int dimension`  
+    Dimension perpendicular to the split plane.
+*   `int index`  
+    Split between `index` and `index+1`.
+
+*   `bool test(const Voxel& voxel)`  
+    Classification of a voxel using the split. True if it's on the upper side of the split (greater coordinate than the split). 
+
+##### `class AppliedSplit`
+Information attached to a set after splitting. Stores the splitting plane and the side of this part.
+
+*   `AppliedSplit(Split& split, bool direction)`  
+
+*   `Split split`  
+    The corresponding split.
+*   `bool direction`  
+    Indicator which side of the plane was chosen.
+
+*   `Plane getPlane(const VoxelSet& voxel_set)`  
+    Mathematical plane of, oriented so that this subset lies on the front (distance > 0).
+*   `static int mergeSplits(const AppliedSplit& a, const AppliedSplit& b)`  
+    Evaluation whether two splits can be merged (because one is a subset of the other).
+
+##### `class VoxelSubset`
+A subset of a voxelized mesh. Keeps a list of the voxels part of this subset and information about the splits made. A subset generates one convex body.
+
+###### Creation
+*   `VoxelSubset(std::shared_ptr<VoxelSet> voxels)`  
+    Creates an empty subset linked to a voxel set.
+*   `VoxelSubset(const VoxelSubset& subset, bool empty = false)`  
+    Creates a new subset by copying an existing one. Refine a subset by copying it, but removing the voxels(with set `empty` flag). Then add the voxels that fit your criteria.
+
+*   `void addVoxel(Index index)`  
+    Add a voxel to the subset.
+*   `void addSplit(AppliedSplit split)`  
+    Add a split that clips the subset.
+*   `void calculateConvexHull()`  
+    Compute the convex hull of the triangles associated with the subset. Clips triangles against the splits.
+
+###### Further partition
+*   `std::vector<VoxelSubset> partition(Split split)`  
+    Partition into two sets according to a split.
+*   `void setFinal()`  
+    Sets the flag to stop partitioning this set.
+
+###### Getter
+*   `Real convexVolume() const`  
+    Volume of the associated convex body.
+*   `Real volume() const`  
+    Volume of the geometry of the subset, approximated by the filled voxels.
+
+*   `std::shared_ptr<Mesh> getConvexHull()`  
+    Get the mesh of the surface of the subsets convex hull.
+
+*   `bool isFinal()`  
+    Check whether the subset should be further split.
+
+##### `class SegmenterSimple`
+
+*   `SegmenterSimple(Real voxel_size)`
+    Create a segmenter, voxel_size will be used to rasterize the mesh.
+
+###### Configuration
+*   `void setMaxPasses(int passes)`  
+    Set the number of passes (iterations of splitting the subsets). 
+*   `void setMinVolumeGain(Real min_gain)`  
+    Set the minimal improvement of the cost function that causes a partitioning.
+
+*   `void setMesh(std::shared_ptr <Mesh> mesh)`  
+    Select the model to segment/decompose.
+
+###### Main algorithm
+*   `void compute()`  
+    Compute the segmentation of the mesh
+
+###### Results
+*   `std::vector< std::shared_ptr<Mesh> > getSegmentation()`  
+    Get the convex meshes of the segmentation.
+
+####### Internal methods
+*   `std::vector<Split> generateSplits(const VoxelSubset& subset)`  
+    Compute all possible splits that could partition a certain subset. They will will be evaluated and the one with the best rating is executed.
+*   `Real evaluatePartition(const VoxelSubset& previous_set, const std::vector<VoxelSubset>& partition)`  
+    Compute heuristic evaluation of previous set into a partition.
+*   `Real evaluateSubset(const VoxelSubset& subset)`  
+    Compute evaluation of a subset (currently normalized to 1).
+

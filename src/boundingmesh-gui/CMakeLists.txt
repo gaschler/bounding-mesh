@@ -25,7 +25,6 @@ if(COIN_FOUND AND OPENGL_FOUND AND QT_FOUND AND SOQT_FOUND)
 		${RCC_SRCS}
 		gui.cpp
 		ViewerMesh.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/../extras/utils.cpp
 		boundingmesh-gui.rc
 	)
 	target_compile_definitions(
@@ -45,7 +44,7 @@ if(COIN_FOUND AND OPENGL_FOUND AND QT_FOUND AND SOQT_FOUND)
 		${QT_INCLUDES}
 		${SOQT_INCLUDE_DIRS}
 		${CMAKE_CURRENT_SOURCE_DIR}/../boundingmesh-bin/
-		${CMAKE_CURRENT_SOURCE_DIR}/../extras/
+		#############${CMAKE_CURRENT_SOURCE_DIR}/../extras/
 	)
 	target_link_libraries(
 		boundingmesh-gui

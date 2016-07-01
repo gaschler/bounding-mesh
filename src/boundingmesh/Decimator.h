@@ -75,6 +75,11 @@ namespace boundingmesh
 		std::shared_ptr< Mesh > doContractions(unsigned int n = 1);
 		std::shared_ptr< Mesh > compute(ComputeCallback callback = NULL);
 
+		static unsigned int nSubsets(unsigned int subset_size, unsigned int total_size);
+		static void nextSubset(std::vector<unsigned int>& indices_subset,  unsigned int total_size);
+		static bool solveConstrainedMinimization(const Matrix44& qem, const std::vector<Plane>& constraints, const std::vector<unsigned int>& subset, DecimationDirection direction, Vector3& result);
+		static bool solveConstrainedMinimizationInequalities(const Matrix44& qem, const std::vector<Plane>& constraints, DecimationDirection direction, Vector3& result, Real& result_cost);
+
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		
 	private:
@@ -99,14 +104,11 @@ namespace boundingmesh
 					std::set<Index>& edges_to_remove, std::vector<Index*>& hole_border);
 
 		EdgeContraction computeEdgeContraction(Index edge_index);
-		unsigned int nSubsets(unsigned int subset_size, unsigned int total_size);
-		void nextSubset(std::vector<unsigned int>& indices_subset,  unsigned int total_size);
 
-		bool solveConstrainedMinimization(const Matrix44& qem, const std::vector<Plane>& constraints, const std::vector<unsigned int>& subset, Vector3& result);
-		Vector3 minimizeSubspace(const Matrix44& qadratic_cost);
-		Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane);
-		Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1, Plane plane2);
-		Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1, Plane plane2, Plane plane3);
+		static Vector3 minimizeSubspace(const Matrix44& qadratic_cost);
+		static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane);
+		static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1, Plane plane2);
+		static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1, Plane plane2, Plane plane3);
 		Vector3 minimizeLagrange(const Matrix44& qadratic_cost);
 		Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane);
 		Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane1, Plane plane2);

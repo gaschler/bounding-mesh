@@ -1,16 +1,16 @@
-//	Copyright (c) 2013, Andre Gaschler, Quirin Fischer
+//	Copyright (c) 2015, Andre Gaschler, Quirin Fischer
 //	All rights reserved.
-//	
+//
 //	Redistribution and use in source and binary forms, with or without modification,
 //	are permitted provided that the following conditions are met:
-//	
+//
 //	* Redistributions of source code must retain the above copyright notice, this
 //	  list of conditions and the following disclaimer.
-//	
+//
 //	* Redistributions in binary form must reproduce the above copyright notice, this
 //	  list of conditions and the following disclaimer in the documentation and/or
 //	  other materials provided with the distribution.
-//	
+//
 //	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 //	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 //	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -22,14 +22,45 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <boundingmesh.h>
-#include <memory>
+#ifndef BOUNDINGMESH_SPLIT_H
+#define BOUNDINGMESH_SPLIT_H
 
-enum FileFormat
+#include "Mesh.h"
+#include "VoxelSet.h"
+
+namespace boundingmesh
 {
-	Invalid, Off, Obj, Stl, Wrl
-};
+    class Split
+    {
+    public:
+        Split();
 
-FileFormat getFileFormat(std::string filename);
+        Split(int dimension, int index);
 
-std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename);
+        ~Split();
+
+        int dimension;
+        int index;
+
+        Vector3 directionVector();
+
+        bool test(const Voxel &voxel);
+    };
+
+    class AppliedSplit
+    {
+    public:
+        AppliedSplit(Split &split, bool direction);
+
+        Split split;
+        bool direction;
+
+        Plane getPlane(const VoxelSet &voxel_set);
+
+        static int mergeSplits(const AppliedSplit &a, const AppliedSplit &b);
+
+        static int mergeSplitsMerge(const AppliedSplit &a, const AppliedSplit &b);
+    };
+}
+
+#endif //BOUNDINGMESH_SPLIT_H

@@ -2,13 +2,11 @@ project(boundingmesh-bin)
 
 include_directories(
 	${BOUNDINGMESH_INCLUDE_DIRS}
-	${CMAKE_CURRENT_SOURCE_DIR}/../extras
 )
 
 add_executable(
 	boundingmesh-bin
-	main.cpp
-	../extras/utils.cpp
+	boundingmesh-cli.cpp
 )
 
 set_target_properties(
@@ -23,6 +21,24 @@ target_link_libraries(
 )
 
 add_dependencies(boundingmesh-bin boundingmesh)
+
+add_test(testBoundingmeshTorus boundingmesh -v 100 "${CMAKE_SOURCE_DIR}/examples/torus/torus.off" "${CMAKE_BINARY_DIR}/torus_decimated.off")
+add_test(testBoundingmeshTeapot boundingmesh -v 1000 "${CMAKE_SOURCE_DIR}/examples/teapot/teapot.off" "${CMAKE_BINARY_DIR}/teapot_decimated.off")
+
+add_executable(
+	bounding-convex-decomposition
+	bounding-convex-decomposition-cli.cpp
+)
+
+target_link_libraries(
+	bounding-convex-decomposition
+	${BOUNDINGMESH_LIBRARIES}
+)
+
+add_dependencies(bounding-convex-decomposition boundingmesh)
+
+add_test(testBoundingConvexDecompositionBunny ${CMAKE_BINARY_DIR}/bounding-convex-decomposition -x 20000 "${CMAKE_SOURCE_DIR}/examples/bunny/bunny.off" "${CMAKE_BINARY_DIR}/bunny_decomposition.wrl")
+add_test(testBoundingConvexDecompositionTeapot ${CMAKE_BINARY_DIR}/bounding-convex-decomposition "${CMAKE_SOURCE_DIR}/examples/teapot/teapot.off" "${CMAKE_BINARY_DIR}/teapot_decomposition.wrl")
 
 install(
 	TARGETS

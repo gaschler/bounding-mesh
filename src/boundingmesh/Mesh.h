@@ -92,7 +92,7 @@ namespace boundingmesh
 		// Loading/Saving files
 		void loadOff(const std::string filename);
 		void loadObj(const std::string filename);
-		void loadWrl(const std::string filename, int faceset = -1);
+		void loadWrl(const std::string filename, int faceset = -1, bool debugOutput = true);
 		void loadStl(const std::string filename);
 		void writeOff(const std::string filename);
 		void writeObj(const std::string filename);
@@ -112,8 +112,13 @@ namespace boundingmesh
 		Index addVertex(const Vector3& vertex);
 		Index addTriangle(Index vertex1, Index vertex2, Index vertex3);
 
+		Real getBoundingBoxDiagonal();
+
 		void removeVertex(Index vertex);
 		void removeTriangle(Index triangle);
+
+		void closeHoles();
+		Real calculateConvexVolume();
 
 		void cleanAndRenumber();
 		bool isDirty();
@@ -151,6 +156,23 @@ namespace boundingmesh
 		static Vector3 HSVtoRGB(Vector3 color);
 		static std::vector<Vector3> generateColors(int n);
 	};
+
+	class Convex
+	{
+	public:
+		Convex();
+		Convex(const Convex& other);
+		Convex(const std::vector<Vector3>& points);
+		~Convex();
+		
+		Convex& operator=(Convex other);
+		friend void swap(Convex& first, Convex& second);
+
+		double ComputeVolume();
+
+		std::shared_ptr<Mesh> mesh;
+		Real volume;
+	};	
 } 
 
 #endif //BOUNDINGMESH_MESH_H

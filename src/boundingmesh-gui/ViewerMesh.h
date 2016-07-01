@@ -42,9 +42,9 @@ public:
 	~ViewerMesh()
 	{
 		this->model_root->unref();
-		delete vertices;
-		delete num_vertices;
-		delete norms;
+		delete[] vertices;
+		delete[] num_vertices;
+		delete[] norms;
 	}
 	
 	void replaceByMesh(::std::shared_ptr< boundingmesh::Mesh > mesh);

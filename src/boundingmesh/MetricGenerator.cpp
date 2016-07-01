@@ -761,11 +761,13 @@ namespace boundingmesh
 		Eigen::Matrix<Real, 3, 1> b_ = -(E.transpose() * result * f);
 		Eigen::Matrix<Real, 3, 1> minimizer = A.ldlt().solve(b_);
 
-		/*std::cout<<"A:"<<std::endl<<A<<std::endl;
+#if 0
+		std::cout<<"A:"<<std::endl<<A<<std::endl;
 		std::cout<<"b: "<<b_.transpose()<<std::endl;
 		std::cout<<"min for transl "<<minimizer.transpose()<<std::endl;
 		std::cout<<"A*min "<<(A*minimizer).transpose()<<std::endl;
-*/
+#endif
+
 		Matrix44 translation = Matrix44::Identity();
 		translation.col(3)<< -minimizer, 1;
 		Matrix44 translation_inv = Matrix44::Identity();

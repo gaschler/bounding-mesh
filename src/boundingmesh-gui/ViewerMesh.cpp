@@ -38,10 +38,12 @@ void ViewerMesh::setWireframe(bool wireframe)
 
 void ViewerMesh::replaceByMesh(::std::shared_ptr< boundingmesh::Mesh > mesh)
 {
-	delete norms, num_vertices, vertices;
-	norms = new(float[mesh->nTriangles()][3]);
-	num_vertices = new(int[mesh->nTriangles()]);
-	vertices = new(float[mesh->nTriangles() * 3][3]);
+	delete[] norms;
+	delete[] num_vertices;
+	delete[] vertices;
+	norms = new float[mesh->nTriangles()][3];
+	num_vertices = new int[mesh->nTriangles()];
+	vertices = new float[mesh->nTriangles() * 3][3];
 	
 	for(unsigned int i = 0; i < mesh->nTriangles(); ++i)
 	{
