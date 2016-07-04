@@ -561,9 +561,11 @@ void SegmenterDownsampling::setMesh(std::shared_ptr<Mesh> mesh,
 	while (count < min_voxel_count * 0.9 || count > min_voxel_count * 1.1) {
 		set = VoxelSet(mesh, length, true);
 		count = set.nVoxels();
+		//std::cout << "count: " << count << " length: " << length << std::endl;
 		if (count < min_voxel_count * 0.9 || count > min_voxel_count * 1.1) {
 			double a = pow((double) (min_voxel_count) / count, 1.0 / 3.0);
 			length = length / a;
+			//std::cout << "a: " << a << " length: " << length << std::endl;
 		}
 	}
 
@@ -886,7 +888,7 @@ void SegmenterDownsampling::computeBestClippingPlane(
 void SegmenterDownsampling::printDebugSlices(VoxelSubset whole_mesh) {
 	for (int i = 0; i < voxels_->resolution(0); i++) {
 		std::vector<VoxelSubset> parts = whole_mesh.partitionVoxel(Split(0, i));
-		parts[0].writeWRL("part" + std::to_string(i) + "_voxel.wrl");
+		parts[0].writeWRL("part" + std::to_string(static_cast<long long>(i)) + "_voxel.wrl");
 	}
 }
 
@@ -915,7 +917,7 @@ void SegmenterDownsampling::compute() {
 				meshes.push_back(parts[i].getConvexHull());
 			}
 			boundingmesh::Mesh::writeMultimeshWrl(meshes,
-					"step" + std::to_string(pass) + ".wrl", true);
+					"step" + std::to_string(static_cast<long long>(pass)) + ".wrl", true);
 		}
 		for (int partIndex = 0; partIndex < inputParts.size(); partIndex++) {
 			VoxelSubset currentPart = inputParts[partIndex];
@@ -927,11 +929,11 @@ void SegmenterDownsampling::compute() {
 			}
 			if (debug_) {
 				currentPart.getConvexHull()->writeWrl(
-						"step" + std::to_string(pass) + "_"
-								+ std::to_string(partIndex) + ".wrl");
+						"step" + std::to_string(static_cast<long long>(pass)) + "_"
+								+ std::to_string(static_cast<long long>(partIndex)) + ".wrl");
 				inputParts[partIndex].writeWRL(
-						"step" + std::to_string(pass) + "_"
-								+ std::to_string(partIndex) + "_voxel.wrl",
+						"step" + std::to_string(static_cast<long long>(pass)) + "_"
+								+ std::to_string(static_cast<long long>(partIndex)) + "_voxel.wrl",
 						true);
 			}
 			Real volumeConvexHull = fabs(currentPart.convexVolume());
@@ -956,8 +958,8 @@ void SegmenterDownsampling::compute() {
 							computeLocalConcavity(volume, volumeConvexHull) :
 							0.0;
 			if (debug_) {
-				std::cout << "volume: " + std::to_string(volume)
-						<< " convexVolume: " << std::to_string(volumeConvexHull)
+				std::cout << "volume: " << volume
+						<< " convexVolume: " << volumeConvexHull
 						<< " concavity: " << concavity << " error: " << error
 						<< " localConcavity: " << localConcavity << std::endl;
 			}
@@ -1012,14 +1014,14 @@ void SegmenterDownsampling::compute() {
 	}
 	std::cout << "Merging convex hulls..." << std::endl;
 	//parts = mergeConvexHulls(parts);
-	for (unsigned int i = 0; i < parts.size(); ++i) {
+	for (long long i = 0; i < parts.size(); ++i) {
 		if (debug_) {
 			meshes.push_back(parts[i].getConvexHull());
 		}
 		parts[i].calculateConvexHull();
 		if (debug_) {
 			parts[i].getConvexHull()->writeWrl(
-					"stepfinal_part" + std::to_string(i) + ".wrl");
+					"stepfinal_part" + std::to_string(static_cast<long long>(i)) + ".wrl");
 
 		}
 	}
@@ -1056,7 +1058,7 @@ bool SegmenterDownsampling::arePartsAdjacent(VoxelSubset & p1,
 //the total number of parts decreases at the same time
 std::vector<VoxelSubset> SegmenterDownsampling::mergeConvexHulls(
 		std::vector<VoxelSubset> parts) {
-	int iteration = 0;
+	long long iteration = 0;
 	if (parts.size() > 1) {
 		bool iterate = true;
 

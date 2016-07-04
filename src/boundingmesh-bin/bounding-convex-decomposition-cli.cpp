@@ -122,7 +122,12 @@ int main(int argc, char** argv)
 	std::cout << "Loading mesh..." << std::endl;
 	std::shared_ptr<boundingmesh::Mesh> mesh = boundingmesh::loadMesh(filename_in);
 	if (mesh == NULL) {
+		std::cerr << "Error: could not load mesh" << std::endl;
 		return 1;
+	}
+	if (mesh->nVertices() < 4) {
+		std::cerr << "Error: mesh could not be read" << std::endl;
+		return 2;
 	}
 
 	boundingmesh::Real bounding_box_diagonal = mesh->getBoundingBoxDiagonal();
@@ -142,10 +147,10 @@ int main(int argc, char** argv)
 
 	std::cout << "Simplifying bounding convex decomposition with the bounding mesh algorithm..." << std::endl;
 	std::vector < std::shared_ptr<boundingmesh::Mesh> > decomposition_decimated;
-	for (auto convex : decomposition)
+	for (int i = 0; i < decomposition.size(); ++i)
 	{
 		boundingmesh::Decimator decimator;
-		decimator.setMesh(*convex);
+		decimator.setMesh(*decomposition[i]);
 		decimator.setMaximumError(std::pow(target_error * bounding_box_diagonal, 2));
 		decomposition_decimated.push_back(decimator.compute());
 	}

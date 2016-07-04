@@ -11,28 +11,31 @@ include_directories(
 
 find_package(CGAL)
 if(CGAL_FOUND)
-	add_executable(
-		testCgalEigenQuadraticProgramming
-		testCgalEigenQuadraticProgramming.cpp
-		../../thirdparty/EigenQP.cpp
-	)
-	target_compile_definitions(
-		testCgalEigenQuadraticProgramming
-		PUBLIC
-		-DCGAL_DISABLE_ROUNDING_MATH_CHECK
-	)	
-	target_include_directories(
-		testCgalEigenQuadraticProgramming
-		PUBLIC
-		${CGAL_INCLUDE_DIRS}
-	)
-	target_link_libraries(
-		testCgalEigenQuadraticProgramming
-		${BOUNDINGMESH_LIBRARIES}
-		${CGAL_LIBRARIES}
-	)
-	
-	add_test(testCgalEigenQuadraticProgramming ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testCgalEigenQuadraticProgramming)
+	if((NOT MSVC) OR MSVC_VERSION GREATER 1699)
+		add_executable(
+			testCgalEigenQuadraticProgramming
+			testCgalEigenQuadraticProgramming.cpp
+			../../thirdparty/EigenQP.cpp
+		)
+		target_compile_definitions(
+			testCgalEigenQuadraticProgramming
+			PUBLIC
+			-DCGAL_DISABLE_ROUNDING_MATH_CHECK
+		)	
+		target_include_directories(
+			testCgalEigenQuadraticProgramming
+			PUBLIC
+			""
+			${CGAL_INCLUDE_DIRS}
+		)
+		target_link_libraries(
+			testCgalEigenQuadraticProgramming
+			${BOUNDINGMESH_LIBRARIES}
+			${CGAL_LIBRARIES}
+		)
+		
+		add_test(testCgalEigenQuadraticProgramming ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/testCgalEigenQuadraticProgramming)
+	endif()
 endif()
 
 

@@ -325,7 +325,7 @@ namespace boundingmesh
 		//Set up the grid dimensions
 		//First compute bounding box of the mesh
 		Vector3 bounding_box_min = Vector3(std::numeric_limits<Real>::max(), std::numeric_limits<Real>::max(), std::numeric_limits<Real>::max());
-		Vector3 bounding_box_max = Vector3(std::numeric_limits<Real>::lowest(), std::numeric_limits<Real>::lowest(), std::numeric_limits<Real>::lowest());
+		Vector3 bounding_box_max = Vector3(std::numeric_limits<Real>::min(), std::numeric_limits<Real>::min(), std::numeric_limits<Real>::min());
 		for(unsigned int i = 0; i < triangle_mesh->nVertices(); ++i)
 		{
 			Vector3 position = triangle_mesh->vertex(i).position();
@@ -337,6 +337,9 @@ namespace boundingmesh
 			bounding_box_max(1) = std::max(bounding_box_max(1), position(1));
 			bounding_box_max(2) = std::max(bounding_box_max(2), position(2));
 		}
+		//FIXME: bunny.off has maximum > 1e200
+		//std::cout << "bounding_box_min: " << bounding_box_min.transpose() << std::endl;
+		//std::cout << "bounding_box_max: " << bounding_box_max.transpose() << std::endl;
 
 		//Compute voxel resolution along the axes
 		//All voxels are cubes with side size voxel_size
