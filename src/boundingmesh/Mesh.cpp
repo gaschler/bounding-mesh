@@ -1035,7 +1035,7 @@ void Mesh::closeHoles() {
 	while (inf && done) {
 		inf = false;
 		done = false;
-	for (int i = 0; i <= edges_.size(); i++) {
+	for (int i = 0; i < edges_.size(); i++) {
 		if (edges_[i].triangles_.size() == 1) {
 			//Determine all edges that are adjacent to the current whole by searching along the hole
 			//This is achieved by following along the edges of the hole until the starting vertex
