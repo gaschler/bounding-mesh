@@ -41,6 +41,7 @@ add_test(testBoundingConvexDecompositionTeapot ${CMAKE_BINARY_DIR}/bounding-conv
 install(
 	TARGETS
 	boundingmesh-bin
+	bounding-convex-decomposition
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

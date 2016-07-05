@@ -57,9 +57,9 @@ const option::Descriptor usage[] =
 {
 	{DUMMY, 0, "", "", option::Arg::None, "\nUsage: bounding-convex-decomposition [options] filename [filename_out.wrl]\nSupported input file formats are .off, .obj, .stl and .wrl\n"},
 	{HELP, 0, "h", "help", option::Arg::None, " --help: Print usage"},
-	{TARGET_ERROR, 0, "e", "error", checkFloat, " --error, -e: Bounding mesh error in bounding box length, default is 0.02" },
+	{TARGET_ERROR, 0, "e", "error", checkFloat, " --error, -e: Allow bounding mesh error in post-processing, measured in bounding box lengths, default is 0.02" },
 	{VOXELS, 0, "x", "voxels", checkInt, " --voxels, -x: Use number of voxels, default is 50000" },
-	{ALPHA, 0, "a", "alpha", checkFloat, " --alpha, -a: Alpha parameter, increases to number of decomposition, default is 1" },
+	{ALPHA, 0, "a", "alpha", checkFloat, " --alpha, -a: Alpha parameter, increases the number of decompositions, default is 1" },
 	{0,0,0,0,0,0}
 };
 
