@@ -45,8 +45,8 @@ namespace boundingmesh
 	class VertexPosition
 	{
 	public:
-		VertexPosition(Vector3 position);
-		VertexPosition(Index index, Vector3 position);
+		VertexPosition(const Vector3& position);
+		VertexPosition(Index index, const Vector3& position);
 		
 		Index index() const;
 
@@ -67,7 +67,9 @@ namespace boundingmesh
 	public:
 		VertexPositionSet(Mesh* mesh);
 		
-		Index addVertex(Vector3 position);
+		Index addVertex(const Vector3& position);
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		Mesh* mesh_;
 		std::set<VertexPosition, std::less<VertexPosition>,
@@ -90,16 +92,16 @@ namespace boundingmesh
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		
 		// Loading/Saving files
-		void loadOff(const std::string filename);
-		void loadObj(const std::string filename);
-		void loadWrl(const std::string filename, int faceset = -1, bool debugOutput = true);
-		void loadStl(const std::string filename);
-		void writeOff(const std::string filename);
-		void writeObj(const std::string filename);
-		void writeWrl(const std::string filename, bool colored = false);
-		void writeStl(const std::string filename, bool binary = false);
+		void loadOff(const std::string& filename);
+		void loadObj(const std::string& filename);
+		void loadWrl(const std::string& filename, int faceset = -1, bool debugOutput = true);
+		void loadStl(const std::string& filename);
+		void writeOff(const std::string& filename);
+		void writeObj(const std::string& filename);
+		void writeWrl(const std::string& filename, bool colored = false);
+		void writeStl(const std::string& filename, bool binary = false);
 		
-		static void writeMultimeshWrl(std::vector<std::shared_ptr<Mesh> >submeshes, std::string filename, bool colored = false);
+		static void writeMultimeshWrl(std::vector<std::shared_ptr<Mesh> >submeshes, const std::string& filename, bool colored = false);
 
 		unsigned int nVertices() const;
 		unsigned int nEdges() const;
@@ -172,6 +174,8 @@ namespace boundingmesh
 
 		std::shared_ptr<Mesh> mesh;
 		Real volume;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};	
 } 
 

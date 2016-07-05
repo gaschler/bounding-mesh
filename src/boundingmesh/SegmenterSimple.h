@@ -47,6 +47,7 @@ namespace boundingmesh
 
 		std::vector< std::shared_ptr<Mesh> > getSegmentation();
 
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		int passes_;
 		Real min_gain_;

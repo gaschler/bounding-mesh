@@ -26,7 +26,7 @@
 #define BOUNDINGMESH_PRIMITIVES_H
 
 #include <Eigen/Dense>
-#include <vector>
+#include <Eigen/StdVector>
 
 namespace boundingmesh
 {
@@ -89,6 +89,7 @@ namespace boundingmesh
 		Index vertex(unsigned int i) const;
 		Index triangle(unsigned int i) const;
 	
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		Index vertices_[2];
 		std::vector<Index> triangles_;	
@@ -104,6 +105,8 @@ namespace boundingmesh
 		Index vertex(unsigned int i) const;
 		Index edge(unsigned int i) const;
 		Plane plane() const;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		Index vertices_[3];
 		Index edges_[3];

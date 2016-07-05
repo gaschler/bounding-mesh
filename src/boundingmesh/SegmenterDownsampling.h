@@ -78,6 +78,7 @@ public:
 		plane_downsampling_ = planeDownsampling;
 	}
 
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 private:
 	int passes_;
 	Real maximum_concavity_;

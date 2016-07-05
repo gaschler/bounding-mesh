@@ -76,6 +76,7 @@ namespace boundingmesh
         std::vector<Index> const& getIndices() const;
         std::shared_ptr<VoxelSet> const& getVoxels() const;
 
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     private:
         std::vector<Index> indices_;
         std::vector<AppliedSplit> splits_;

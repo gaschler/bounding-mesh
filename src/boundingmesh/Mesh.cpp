@@ -85,11 +85,11 @@ extern "C" {
 namespace boundingmesh {
 
 //Implementation of class VertexPosition
-VertexPosition::VertexPosition(Vector3 position) :
+VertexPosition::VertexPosition(const Vector3& position) :
 		position_(position), index_(0), searching_(true) {
 }
 
-VertexPosition::VertexPosition(Index index, Vector3 position) :
+VertexPosition::VertexPosition(Index index, const Vector3& position) :
 		position_(position), index_(index), searching_(false) {
 }
 
@@ -114,7 +114,7 @@ VertexPositionSet::VertexPositionSet(Mesh* mesh) :
 		mesh_(mesh), set_() {
 }
 
-Index VertexPositionSet::addVertex(Vector3 position) {
+Index VertexPositionSet::addVertex(const Vector3& position) {
 	std::set<VertexPosition, std::less<VertexPosition>,
 			Eigen::aligned_allocator<VertexPosition> >::iterator iterator =
 			set_.find(VertexPosition(position));
@@ -192,7 +192,7 @@ void swap(Mesh& first, Mesh& second) {
 	std::swap(first.debug_vrml, second.debug_vrml);
 }
 
-void Mesh::loadOff(const std::string filename) {
+void Mesh::loadOff(const std::string& filename) {
 	std::ifstream file(filename.c_str());
 	std::string line;
 	int state = 0;
@@ -279,7 +279,7 @@ void Mesh::loadOff(const std::string filename) {
 	}
 }
 
-void Mesh::loadObj(const std::string filename) {
+void Mesh::loadObj(const std::string& filename) {
 	std::ifstream file(filename.c_str());
 	std::string line;
 
@@ -365,7 +365,7 @@ void triangleCallback(void* userData, SoCallbackAction* action,
 }
 #endif
 
-void Mesh::loadWrl(const std::string filename, int faceset, bool debugOutput) {
+void Mesh::loadWrl(const std::string& filename, int faceset, bool debugOutput) {
 #ifndef COIN_AVAILABLE
 	std::cout<<"Coin required, can't load .wrl."<<std::endl;
 #else
@@ -422,7 +422,7 @@ void Mesh::loadWrl(const std::string filename, int faceset, bool debugOutput) {
 #endif
 }
 
-void Mesh::loadStl(const std::string filename) {
+void Mesh::loadStl(const std::string& filename) {
 	std::ifstream file(filename.c_str());
 	std::string start;
 	file >> start;
@@ -568,7 +568,7 @@ void Mesh::loadStl(const std::string filename) {
 	n_original = vertices_.size();
 }
 
-void Mesh::writeOff(const std::string filename) {
+void Mesh::writeOff(const std::string& filename) {
 	cleanAndRenumber();
 
 	std::cout << "Writing off " << filename << std::endl;
@@ -588,7 +588,7 @@ void Mesh::writeOff(const std::string filename) {
 	file.close();
 }
 
-void Mesh::writeObj(const std::string filename) {
+void Mesh::writeObj(const std::string& filename) {
 	cleanAndRenumber();
 	std::cout << "writing obj " << filename << std::endl;
 	std::ofstream file(filename.c_str());
@@ -609,7 +609,7 @@ void Mesh::writeObj(const std::string filename) {
 	file.close();
 }
 
-void Mesh::writeWrl(const std::string filename, bool colored) {
+void Mesh::writeWrl(const std::string& filename, bool colored) {
 	cleanAndRenumber();
 
 	std::vector<std::shared_ptr<Mesh> > submeshes = computeSubmeshes();
@@ -617,7 +617,7 @@ void Mesh::writeWrl(const std::string filename, bool colored) {
 	writeMultimeshWrl(submeshes, filename, colored);
 }
 
-void Mesh::writeStl(const std::string filename, bool binary) {
+void Mesh::writeStl(const std::string& filename, bool binary) {
 	std::cout << "Writing stl" << std::endl;
 	cleanAndRenumber();
 	if (binary) {
@@ -753,7 +753,7 @@ std::vector<std::shared_ptr<Mesh> > Mesh::computeSubmeshes() {
 }
 
 void Mesh::writeMultimeshWrl(std::vector<std::shared_ptr<Mesh>> submeshes,
-		std::string filename, bool colored) {
+		const std::string& filename, bool colored) {
 
 	std::cout << "Info: Writing wrl " << filename << std::endl;
 	if (submeshes.size() == 0) {
@@ -1029,7 +1029,7 @@ Index Mesh::registerEdge(Index vertex1, Index vertex2, Index triangle) {
 //Closes all holes within the given mesh. This is achieved by introducing a new vertex in the center of
 //each hole and then adding new faces between each edge and that newly created vertex
 void Mesh::closeHoles() {
-	//Find edges that only have one adjacent triangle (are next to an whole)
+	//Find edges that only have one adjacent triangle (are next to a hole)
 	bool inf = true;
 	bool done = true;
 	while (inf && done) {

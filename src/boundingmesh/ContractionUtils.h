@@ -66,6 +66,8 @@ namespace boundingmesh
 
 		friend bool operator<(const ContractionIndex & lhs, const ContractionIndex & rhs);
 		friend bool operator>(const ContractionIndex & lhs, const ContractionIndex & rhs);
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		Index index_;
 		ContractionIterator contraction_;
@@ -82,6 +84,8 @@ namespace boundingmesh
 		void remove(Index edge);
 
 		friend void swap(ContractionQueue& first, ContractionQueue& second);
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		std::multiset<EdgeContraction, std::less<EdgeContraction>,
 				Eigen::aligned_allocator<EdgeContraction> > contractions_;

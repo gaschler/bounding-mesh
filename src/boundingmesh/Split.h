@@ -42,6 +42,8 @@ namespace boundingmesh
         int dimension;
         int index;
 
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
         Vector3 directionVector();
 
         bool test(const Voxel &voxel);
@@ -54,6 +56,8 @@ namespace boundingmesh
 
         Split split;
         bool direction;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
         Plane getPlane(const VoxelSet &voxel_set);
 

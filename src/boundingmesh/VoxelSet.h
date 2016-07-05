@@ -59,6 +59,8 @@ namespace boundingmesh
 		Index triangle(unsigned int i) const;
 
 		void addTriangle(Index triangle);
+		
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	private:
 		Index x_, y_, z_;
@@ -92,6 +94,8 @@ namespace boundingmesh
 		Real volume();
 
 		void writeWRL(std::string filename);
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	private:
 		Vector3 origin_;

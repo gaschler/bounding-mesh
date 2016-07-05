@@ -75,7 +75,8 @@ namespace boundingmesh
 		void contractEdge(Index edge_index);
 
 		void cleanAndRenumber();
-		
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	private:
 		void initialize();
 		Metric metric_;
