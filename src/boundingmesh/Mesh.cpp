@@ -1330,7 +1330,7 @@ Real Mesh::calculateConvexVolume() {
 	Real totalVolume = 0.0;
 
 	//Calculate center point of Mesh
-	Vector3 mean;
+	Vector3 mean = Vector3::Zero();
 	for (int i = 0; i < vertices_.size(); i++) {
 		mean += vertices_[i].position_;
 	}
@@ -1446,7 +1446,7 @@ double Convex::ComputeVolume() {
 		return 0.0;
 	}
 
-	Vector3 bary;
+	Vector3 bary = Vector3::Zero();
 	for (int v = 0; v < mesh->nVertices(); v++) {
 		bary += mesh->vertex(v).position();
 	}

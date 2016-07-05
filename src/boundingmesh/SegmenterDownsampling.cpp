@@ -587,7 +587,7 @@ void VoxelSubset::ComputeBB() {
 	bounding_box_max_[1] = voxels_->voxel(indices_[0]).y();
 	bounding_box_min_[2] = voxels_->voxel(indices_[0]).z();
 	bounding_box_max_[2] = voxels_->voxel(indices_[0]).z();
-	Vector3 bary;
+	Vector3 bary = Vector3::Zero();
 	for (size_t p = 0; p < nVoxels; ++p) {
 		const Voxel & voxel = voxels_->voxel(indices_[p]);
 		bary[0] += voxel.x();

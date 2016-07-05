@@ -337,9 +337,6 @@ namespace boundingmesh
 			bounding_box_max(1) = std::max(bounding_box_max(1), position(1));
 			bounding_box_max(2) = std::max(bounding_box_max(2), position(2));
 		}
-		//FIXME: bunny.off has maximum > 1e200
-		//std::cout << "bounding_box_min: " << bounding_box_min.transpose() << std::endl;
-		//std::cout << "bounding_box_max: " << bounding_box_max.transpose() << std::endl;
 
 		//Compute voxel resolution along the axes
 		//All voxels are cubes with side size voxel_size
