@@ -1072,7 +1072,7 @@ void Mesh::closeHoles() {
 			}
 
 			//Calculate the center point of all edges of the whole
-			Vector3 mean;
+			Vector3 mean = Vector3::Zero();
 			for (int j = 0; j < currentHoleEdges.size(); j++) {
 				for (int k = 0; k < 2; k++) {
 					mean += vertices_[edges_[currentHoleEdges[j]].vertices_[k]].position_;
