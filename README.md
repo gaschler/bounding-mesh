@@ -87,18 +87,18 @@ Technical Report TUM-I1522, Technische Universität München, Germany, June 2015
 ### Screenshots
 
 #### GUI
-![The GUI interface.](https://github.com/Zera-/bounding-mesh/raw/master/images/ScreenshotGUI.png)
-![After some simplification.](https://github.com/Zera-/bounding-mesh/raw/master/images/ScreenshotGUIdecimated.png)
+![The GUI interface.](//github.com/gaschler/bounding-mesh/raw/master/images/ScreenshotGUI.png)
+![After some simplification.](//github.com/gaschler/bounding-mesh/raw/master/images/ScreenshotGUIdecimated.png)
 
 #### Bounding Convex Decomposition
 Original model:
-![Original teapot model](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot.png)
+![Original teapot model](//github.com/gaschler/bounding-mesh/raw/master/images/teapot.png)
 Convex hull:
-![Convex hull](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_hull.png)
+![Convex hull](//github.com/gaschler/bounding-mesh/raw/master/images/teapot_hull.png)
 Voxel set:
-![Voxelized model](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_voxelized.png)
+![Voxelized model](//github.com/gaschler/bounding-mesh/raw/master/images/teapot_voxelized.png)
 Bounding convex decomposition:
-![Bounding convex decomposition](https://github.com/Zera-/bounding-mesh/raw/master/images/teapot_decomposed.png)
+![Bounding convex decomposition](//github.com/gaschler/bounding-mesh/raw/master/images/teapot_decomposed.png)
 
 ### Example Models
 
@@ -139,7 +139,7 @@ We provide a CMake build file. We recommend building by
     make
 
 #### Binaries
-Windows binaries may be included in the [releases](https://github.com/gaschler/bounding-mesh/releases).
+Windows binaries may be included in the [releases](//github.com/gaschler/bounding-mesh/releases).
 
 ### Command-Line Tools
 
