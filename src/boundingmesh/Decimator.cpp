@@ -581,10 +581,10 @@ namespace boundingmesh
 #if USE_EIGENQUADPROG
 		Eigen::MatrixXd G = qem.topLeftCorner<3, 3>();
 		Eigen::VectorXd g0 = qem.topRightCorner<3, 1>();
-		Eigen::MatrixXd CE(3, 0);
-		Eigen::MatrixXd ce0(0, 0);
+		Eigen::MatrixXd CE = Eigen::MatrixXd::Zero(3, 0);
+		Eigen::VectorXd ce0 = Eigen::VectorXd::Zero(0);
 		Eigen::MatrixXd CI(3, constraints.size());
-		Eigen::MatrixXd ci0(1, constraints.size());
+		Eigen::VectorXd ci0(constraints.size());
 		for (int i = 0; i < constraints.size(); ++i)
 		{
 			CI.col(i) = constraints[i].normal;
