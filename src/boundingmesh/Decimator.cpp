@@ -146,7 +146,6 @@ namespace boundingmesh
 			executeEdgeContraction(contraction);
 			
 		}
-		std::cout << "Finished with " << result_mesh_->nVertices() << " vertices" << std::endl;
 		cleanAndRenumber();
 		return result_mesh_;
 	}
@@ -155,7 +154,7 @@ namespace boundingmesh
 	{
 		if(queue_.size() <= n)
 		{
-			std::cout << "Cant perform this many contractions" << std::endl;
+			std::cerr << "Warning: Cannot perform this many contractions" << std::endl;
 			return ::std::make_shared< Mesh >();
 		}
 		for(unsigned int i = 0; i < n; ++i)
@@ -267,7 +266,7 @@ namespace boundingmesh
 		es.compute(qem);
 		if(es.eigenvalues()(0) < -epsilon || es.eigenvalues()(1) < -epsilon || es.eigenvalues()(2) < -epsilon || es.eigenvalues()(3) < -epsilon)
 		{	
-			std::cout << "Bad metric eigenvalues: " << es.eigenvalues().transpose() << std::endl << "Metric:" << std::endl << qem << std::endl;
+			std::cerr << "Warning: Bad metric eigenvalues: " << es.eigenvalues().transpose() << std::endl << "Metric:" << std::endl << qem << std::endl;
 		}
 #endif
 
@@ -643,11 +642,10 @@ namespace boundingmesh
 			if(found)
 				break;
 		}
-		//std::cout << "Used m = " << used_m << std::endl;
-		
+
 		if(minimal_cost < -epsilon)//Catch really wrong cases
 		{
-			std::cout << "Bad contraction, negative cost: " << minimal_cost << std::endl << "qem: " << qem << std::endl << "point" << new_point << std::endl;
+			std::cerr << "Warning: Bad contraction, negative cost: " << minimal_cost << std::endl << "qem: " << qem << std::endl << "point" << new_point << std::endl;
 			minimal_cost = std::numeric_limits<Real>::max();
 		}
 		

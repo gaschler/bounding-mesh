@@ -65,6 +65,7 @@ set(
 	SegmenterDownsampling.h
 	SegmenterSimple.h
 	Split.h
+	VoxelSet.h
 	VoxelSubset.h
 )
 
