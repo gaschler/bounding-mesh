@@ -219,14 +219,16 @@ A minimal example that loads a mesh from an `.off` file, simplifies it until it 
     #include <boundingmesh.h> 
     int main(int argc, char** argv)
     {
-    	boundingmesh::Mesh mesh;
-    	mesh.loadOff("mesh.off");
-    	boundingmesh::Decimator decimator();
-    	decimator.setTargetVertices(1000);
-    	boundingmesh::Mesh* result_mesh = decimator.compute(mesh);
-    	result_mesh->writeOff("mesh_simplified.off");
-    	delete result_mesh;
-    	return 0;
+		boundingmesh::Mesh mesh;
+		mesh.loadOff("mesh.off");
+		boundingmesh::Decimator decimator;
+		decimator.setDirection(boundingmesh::Outward);
+		decimator.setMaximumError(1);
+		decimator.setTargetVertices(1000);
+		decimator.setMesh(mesh);
+		std::shared_ptr<boundingmesh::Mesh> sp_result_mesh
+		sp_result_mesh->writeOff("mesh_simplified.off");
+		return 0;
     };
 
 The following documentation describes the complete library and gives brief explanations of the provided functionality.
