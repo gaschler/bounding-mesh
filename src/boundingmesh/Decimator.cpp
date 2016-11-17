@@ -137,7 +137,7 @@ namespace boundingmesh
 			return result_mesh_;
 
 		//Greedy decimation, repeatedly contract best edge
-		while( (!target_vertices_used_ || result_mesh_->nVertices() > target_vertices_ ) && 
+		while((queue_.size() > 0) && (!target_vertices_used_ || result_mesh_->nVertices() > target_vertices_ ) &&
 			(!maximum_error_used_ || queue_.first().cost() < maximum_error_ ) )
 		{
 			if(callback != NULL)
