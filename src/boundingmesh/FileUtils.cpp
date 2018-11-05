@@ -60,6 +60,8 @@ namespace boundingmesh
 			mesh->loadObj(filename);
 		else if (file_format == Wrl)
 			mesh->loadWrl(filename, -1, debugOutput);
+    else if (file_format == Stl)
+      mesh.loadStl(filename);
 		else
 		{
 			std::cout << "Couldn't load mesh from " << filename << std::endl;
