@@ -41,6 +41,8 @@
 namespace boundingmesh {
 class Segmenter {
  public:
+  virtual ~Segmenter() {}
+
   virtual void compute() = 0;
 
   virtual std::vector<std::shared_ptr<Mesh> > getSegmentation() = 0;
