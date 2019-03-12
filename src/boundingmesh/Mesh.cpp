@@ -68,12 +68,10 @@
 #endif
 
 #ifdef CGAL_AVAILABLE
-#include <CGAL/Cartesian.h>
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Polyhedron_3.h>
-#include <CGAL/algorithm.h>
-#include <CGAL/convex_hull_3.h>
-#include <CGAL/point_generators_3.h>
+#include "CGAL/Cartesian.h"
+#include "CGAL/convex_hull_3.h"
+#include "CGAL/Exact_predicates_inexact_constructions_kernel.h"
+#include "CGAL/Polyhedron_3.h"
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 // typedef CGAL::Cartesian<double>  K;
