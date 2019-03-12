@@ -129,7 +129,7 @@ void Decimator::recomputeQueue() {
          (!maximum_error_used_ || queue_.first().cost() < maximum_error_)) {
     if (callback != NULL)
       callback(result_mesh_->nVertices(), queue_.first().cost());
-    const EdgeContraction& contraction = queue_.first();
+    const EdgeContraction contraction = queue_.first();
     executeEdgeContraction(contraction);
   }
   cleanAndRenumber();
@@ -177,7 +177,7 @@ void Decimator::executeEdgeContraction(const EdgeContraction& contraction) {
   for (unsigned int i = 0; i < hole_border.size(); ++i) {
     result_mesh_->addTriangle(new_vertex_index, hole_border[i][0],
                               hole_border[i][1]);
-    delete hole_border[i];
+    delete[] hole_border[i];
   }
 
   const Vertex& new_vertex = result_mesh_->vertex(new_vertex_index);
