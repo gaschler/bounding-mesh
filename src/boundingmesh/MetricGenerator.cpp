@@ -675,7 +675,6 @@ Matrix44 MetricGenerator::mergeMax(const Matrix44& a, const Matrix44& b) {
   minimizer_4_a << minimizer_a, 1;
   Real minimum_a = minimizer_4_a.transpose() * a * minimizer_4_a;
 
-  Eigen::Matrix<Real, 3, 3> A_b = E.transpose() * b * E;
   Eigen::Matrix<Real, 3, 1> b_b = -(E.transpose() * b * f);
   Eigen::Matrix<Real, 3, 1> minimizer_b = A_a.ldlt().solve(b_b);
   Eigen::Matrix<Real, 4, 1> minimizer_4_b;

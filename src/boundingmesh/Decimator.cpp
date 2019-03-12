@@ -284,10 +284,9 @@ EdgeContraction Decimator::computeEdgeContraction(Index edge_index) {
 
   if (direction_ == Any) {
     if (border_vertices == 0 || border_vertices == 2) {
-      bool found_valid = solveConstrainedMinimization(
-          qem, std::vector<Plane>(), std::vector<unsigned int>(), direction_,
-          new_point);
-      assert(found_valid);
+      assert(solveConstrainedMinimization(qem, std::vector<Plane>(),
+                                          std::vector<unsigned int>(),
+                                          direction_, new_point));
     }
     // For border_vertices == 1 the new point is already found
 

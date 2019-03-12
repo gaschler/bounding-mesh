@@ -1379,7 +1379,6 @@ Convex::Convex(const std::vector<Vector3>& points) {
     Halfedge_facet_circulator j = i->facet_begin();
     Index indices[3];
     unsigned int vertex_index = 0;
-    int ii = 0;
     do {
       Vector3 position;
       position(0) = j->vertex()->point().x();
