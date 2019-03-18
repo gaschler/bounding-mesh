@@ -109,6 +109,6 @@ class VoxelSet {
   std::vector<int> grid_;
   std::shared_ptr<Mesh> mesh_;
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_VOXELMESH_H

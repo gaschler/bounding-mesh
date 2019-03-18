@@ -74,6 +74,6 @@ class SegmenterSimple : public Segmenter {
                          const std::vector<VoxelSubset>& partition);
   Real evaluateSubset(const VoxelSubset& subset);
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_SEGMENTER_SIMPLE_H

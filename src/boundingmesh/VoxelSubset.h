@@ -104,6 +104,6 @@ class VoxelSubset {
   Convex convex_hull_;
   bool final_;
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_VOXELSUBSET_H

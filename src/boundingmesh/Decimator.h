@@ -130,5 +130,5 @@ class Decimator {
   Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane1,
                            Plane plane2, Plane plane3);
 };
-}
+}  // namespace boundingmesh
 #endif  // BOUNDINGMESH_DECIMATOR_H

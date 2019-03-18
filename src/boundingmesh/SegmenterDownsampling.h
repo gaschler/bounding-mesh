@@ -129,6 +129,6 @@ class SegmenterDownsampling {
                                 Split& bestSplit);
   void printDebugSlices(VoxelSubset whole_mesh);
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_SEGMENTER_DOWNSAMPLING_H

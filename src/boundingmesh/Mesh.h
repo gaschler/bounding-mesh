@@ -188,6 +188,6 @@ class Convex {
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_MESH_H

@@ -121,6 +121,6 @@ class Triangle {
   Index edges_[3];
   Plane plane_;
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_PRIMITIVES_H

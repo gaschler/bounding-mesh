@@ -49,5 +49,5 @@ class Segmenter {
 
   virtual void setMesh(std::shared_ptr<Mesh> mesh, int min_voxel_count) = 0;
 };
-}
+}  // namespace boundingmesh
 #endif  // BOUNDINGMESH_SEGMENTER_H

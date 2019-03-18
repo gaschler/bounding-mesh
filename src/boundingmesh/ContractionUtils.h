@@ -105,6 +105,6 @@ class ContractionQueue {
 
   friend class Decimator;
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_CONTRACTIONUTILS_H

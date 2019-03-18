@@ -46,6 +46,6 @@ FileFormat getFileFormat(std::string filename);
 
 std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename,
                                              bool debugOutput = true);
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_FILEUTILS_H

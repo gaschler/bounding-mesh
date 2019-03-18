@@ -73,6 +73,6 @@ class AppliedSplit {
 
   static int mergeSplitsMerge(const AppliedSplit &a, const AppliedSplit &b);
 };
-}
+}  // namespace boundingmesh
 
 #endif  // BOUNDINGMESH_SPLIT_H
