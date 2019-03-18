@@ -123,5 +123,5 @@ class MetricGenerator {
   Matrix44 mergeDiagonalization(const Matrix44& a, const Matrix44& b);
   Matrix44 mergeAverage(const Matrix44& a, const Matrix44& b);
 };
-}
+}  // namespace boundingmesh
 #endif  // BOUNDINGMESH_METRICGENERATOR_H
