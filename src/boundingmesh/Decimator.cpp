@@ -34,7 +34,6 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Decimator.h"
-#include "../../thirdparty/EigenQP.h"
 
 #include <cmath>
 #include <limits>
