@@ -42,9 +42,9 @@
 namespace boundingmesh {
 enum FileFormat { Invalid, Off, Obj, Stl, Wrl };
 
-FileFormat getFileFormat(std::string filename);
+FileFormat getFileFormat(string filename);
 
-std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename,
+std::shared_ptr<boundingmesh::Mesh> loadMesh(string filename,
                                              bool debugOutput = true);
 }  // namespace boundingmesh
 

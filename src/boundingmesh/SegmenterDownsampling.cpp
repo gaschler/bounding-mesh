@@ -241,7 +241,7 @@ Real convexHull2DArea(std::vector<Point_2> points) {
 // at the specified direction (first return value)
 // Additionally the area of the inner pixels is calculated
 void write2DHullWRL(std::vector<Point_2> points, std::vector<Point_2> hull,
-                    std::string filename) {
+                    string filename) {
   std::ofstream file(filename.c_str());
   file << "#VRML V2.0 utf8" << std::endl << std::endl;
   file << "#Created by boundingmesh" << std::endl << std::endl;
@@ -490,7 +490,7 @@ void VoxelSubset::calculateConvexHullVoxel() {
 
 // Simply method for debugging purposes which outputs a given voxel subset
 // to a file in WRL file format
-void VoxelSubset::writeWRL(std::string filename, bool debugTriangles) {
+void VoxelSubset::writeWRL(string filename, bool debugTriangles) {
   std::ofstream file(filename.c_str());
   file << "#VRML V2.0 utf8" << std::endl << std::endl;
   file << "#Created by boundingmesh" << std::endl << std::endl;

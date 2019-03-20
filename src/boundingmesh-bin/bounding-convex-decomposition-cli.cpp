@@ -93,8 +93,8 @@ int main(int argc, char** argv) {
     option::printUsage(std::cout, usage);
   }
 
-  std::string filename_in;
-  std::string filename_out;
+  string filename_in;
+  string filename_out;
 
   if (parse.nonOptionsCount() == 2) {
     filename_in = parse.nonOption(0);

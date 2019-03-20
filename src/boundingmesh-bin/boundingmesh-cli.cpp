@@ -102,7 +102,7 @@ option::ArgStatus checkFloat(const option::Option& option, bool msg) {
   return option::ARG_IGNORE;
 }
 
-boundingmesh::DecimationDirection parseDirection(std::string direction) {
+boundingmesh::DecimationDirection parseDirection(string direction) {
   if (direction == "Inward")
     return boundingmesh::Inward;
   else if (direction == "Outward")
@@ -116,7 +116,7 @@ boundingmesh::DecimationDirection parseDirection(std::string direction) {
   }
 }
 
-boundingmesh::Metric parseMetric(std::string metric) {
+boundingmesh::Metric parseMetric(string metric) {
   if (metric == "QEM_Classic")
     return boundingmesh::ClassicQEM;
   else if (metric == "QEM_Modified")
@@ -134,7 +134,7 @@ boundingmesh::Metric parseMetric(std::string metric) {
   }
 }
 
-boundingmesh::Initialization parseInitialization(std::string initialization) {
+boundingmesh::Initialization parseInitialization(string initialization) {
   if (initialization == "Midpoint")
     return boundingmesh::Midpoint;
   else if (initialization == "DistancePrimitives")
@@ -196,8 +196,8 @@ int main(int argc, char** argv) {
     option::printUsage(std::cout, usage);
   }
 
-  std::string filename_in;
-  std::string filename_out;
+  string filename_in;
+  string filename_out;
 
   if (parse.nonOptionsCount() == 2) {
     filename_in = parse.nonOption(0);
@@ -217,7 +217,7 @@ int main(int argc, char** argv) {
   boundingmesh::DecimationDirection direction = boundingmesh::Outward;
 
   if (options[DIRECTION]) {
-    direction = parseDirection(std::string(options[DIRECTION].arg));
+    direction = parseDirection(string(options[DIRECTION].arg));
   }
 
   boundingmesh::Mesh mesh;

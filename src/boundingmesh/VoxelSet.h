@@ -97,7 +97,7 @@ class VoxelSet {
 
   Real volume();
 
-  void writeWRL(std::string filename);
+  void writeWRL(string filename);
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

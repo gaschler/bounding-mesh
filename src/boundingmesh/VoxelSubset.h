@@ -77,7 +77,7 @@ class VoxelSubset {
   std::pair<Real, Real> calculate2DConvexHullVolume(int direction);
   std::shared_ptr<Mesh> getConvexHull();
 
-  void writeWRL(std::string filename, bool debugTriangles = false);
+  void writeWRL(string filename, bool debugTriangles = false);
 
   bool isFinal();
   void setFinal();

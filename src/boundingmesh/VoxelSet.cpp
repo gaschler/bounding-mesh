@@ -676,7 +676,7 @@ Vector3 VoxelSet::computePosition(const Voxel& voxel) const {
          Vector3(voxel_size_, 0, 0) * voxel.z();
 }
 
-void VoxelSet::writeWRL(std::string filename) {
+void VoxelSet::writeWRL(string filename) {
   std::ofstream file(filename.c_str());
   file << "#VRML V2.0 utf8" << std::endl << std::endl;
   file << "#Created by boundingmesh" << std::endl << std::endl;

@@ -267,7 +267,7 @@ The source code is written mostly conforming to the [Google C++ Style Guide](htt
 `int main(int argc, char** argv)`  
 Reads the given arguments and adds default arguments if needed. Then the used file formats are determined and the input file loaded. The mesh is simplified and finally the results are written to the specified file.
 
-`FileFormat getFileFormat(std::string filename)`  
+`FileFormat getFileFormat(string filename)`  
 Determines the file format by extracting and matching the file extension.
 
 `enum FileFormat`  
@@ -448,16 +448,16 @@ A triangle mesh. Stores it's vertices, edges and triangles. Meshes can be change
 *   `Mesh(const std::vector<Vector>& vertices,const std::vector<Index*>& triangles)`  
     Construct a mesh from a list of vertex positions and a list of index 3-tuples defining the triangles.
 
-*   `void loadOff(const std::string filename)`  
-    `void loadObj(const std::string filename)`  
-    `void loadStl(const std::string filename)`  
-    `void loadWrl(const std::string filename)`  
+*   `void loadOff(const string filename)`  
+    `void loadObj(const string filename)`  
+    `void loadStl(const string filename)`  
+    `void loadWrl(const string filename)`  
     Loads mesh data from a file. `loadWrl` requires the Coin library.
 
-*   `void writeOff(const std::string filename)`  
-    `void writeObj(const std::string filename)`  
-    `void writeStl(const std::string filename)`  
-    `void writeWrl(const std::string filename)`  
+*   `void writeOff(const string filename)`  
+    `void writeObj(const string filename)`  
+    `void writeStl(const string filename)`  
+    `void writeWrl(const string filename)`  
     Saves mesh data to a file.
 
 ###### Getter
@@ -510,7 +510,7 @@ These methods are only used internally.
     Partitions the mesh graph, every connected component is a submesh. 
 
 ###### Static methods
-*   `void writeMultimeshWrl(std::vector<std::shared_ptr<Mesh> >submeshes, std::string filename, bool colored = false)`  
+*   `void writeMultimeshWrl(std::vector<std::shared_ptr<Mesh> >submeshes, string filename, bool colored = false)`  
     Create a VRML file containing multiple meshes.
 *   `static Vector3 HSVtoRGB(Vector3 color)`  
     Transformation from HSV to RGB color space.
@@ -734,7 +734,7 @@ A set of voxels, the equivalent of a mesh.
 ###### Others
 *   `void addVoxel(const Voxel& voxel)`  
     Add a voxel to the set.
-*   `void writeWRL(std::string filename)`  
+*   `void writeWRL(string filename)`  
     Generate a VRML file to display the voxel set. Coloring dependent on voxel type.
 
 ###### Internal data structures

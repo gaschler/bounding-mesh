@@ -38,8 +38,8 @@
 
 namespace boundingmesh {
 
-FileFormat getFileFormat(std::string filename) {
-  std::string file_extension = filename.substr(filename.rfind(".") + 1);
+FileFormat getFileFormat(string filename) {
+  string file_extension = filename.substr(filename.rfind(".") + 1);
 
   if (file_extension == "off")
     return Off;
@@ -56,7 +56,7 @@ FileFormat getFileFormat(std::string filename) {
   }
 }
 
-std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename,
+std::shared_ptr<boundingmesh::Mesh> loadMesh(string filename,
                                              bool debugOutput) {
   FileFormat file_format = Invalid;
 

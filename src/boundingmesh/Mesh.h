@@ -101,18 +101,18 @@ class Mesh {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   // Loading/Saving files
-  void loadOff(const std::string& filename);
-  void loadObj(const std::string& filename);
-  void loadWrl(const std::string& filename, int faceset = -1,
+  void loadOff(const string& filename);
+  void loadObj(const string& filename);
+  void loadWrl(const string& filename, int faceset = -1,
                bool debugOutput = true);
-  void loadStl(const std::string& filename);
-  void writeOff(const std::string& filename);
-  void writeObj(const std::string& filename);
-  void writeWrl(const std::string& filename, bool colored = false);
-  void writeStl(const std::string& filename, bool binary = false);
+  void loadStl(const string& filename);
+  void writeOff(const string& filename);
+  void writeObj(const string& filename);
+  void writeWrl(const string& filename, bool colored = false);
+  void writeStl(const string& filename, bool binary = false);
 
   static void writeMultimeshWrl(std::vector<std::shared_ptr<Mesh> > submeshes,
-                                const std::string& filename,
+                                const string& filename,
                                 bool colored = false);
 
   unsigned int nVertices() const;
@@ -137,7 +137,7 @@ class Mesh {
   void cleanAndRenumber();
   bool isDirty();
 
-  void setDebugData(std::string debug_string);
+  void setDebugData(string debug_string);
 
  private:
   std::deque<Vertex> vertices_;
@@ -162,7 +162,7 @@ class Mesh {
 
   // Debug data
   unsigned int n_original;
-  std::string debug_vrml;
+  string debug_vrml;
 
   // For multipart-output
   std::vector<std::shared_ptr<Mesh> > computeSubmeshes();

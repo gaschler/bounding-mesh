@@ -201,9 +201,9 @@ void swap(Mesh& first, Mesh& second) {
   std::swap(first.debug_vrml, second.debug_vrml);
 }
 
-void Mesh::loadOff(const std::string& filename) {
+void Mesh::loadOff(const string& filename) {
   std::ifstream file(filename.c_str());
-  std::string line;
+  string line;
   int state = 0;
   unsigned int n_vertices = 0;
   unsigned int n_faces = 0;
@@ -283,12 +283,12 @@ void Mesh::loadOff(const std::string& filename) {
   }
 }
 
-void Mesh::loadObj(const std::string& filename) {
+void Mesh::loadObj(const string& filename) {
   std::ifstream file(filename.c_str());
-  std::string line;
+  string line;
 
   Real x, y, z;
-  std::string a_str, b_str, c_str;
+  string a_str, b_str, c_str;
   Index a, b, c;
 
   while (!file.eof() && file.good()) {
@@ -296,7 +296,7 @@ void Mesh::loadObj(const std::string& filename) {
     if (line.size() == 0) continue;
     if (line.at(0) == '#') continue;
     std::stringstream linestream(line);
-    std::string mode;
+    string mode;
     linestream >> mode;
     if (mode == "v") {
       // Reading vertex
@@ -368,7 +368,7 @@ void triangleCallback(void* userData, SoCallbackAction* action,
 }
 #endif
 
-void Mesh::loadWrl(const std::string& filename, int faceset, bool debugOutput) {
+void Mesh::loadWrl(const string& filename, int faceset, bool debugOutput) {
 #ifndef COIN_AVAILABLE
   std::cout << "Coin required, can't load .wrl." << std::endl;
 #else
@@ -423,9 +423,9 @@ void Mesh::loadWrl(const std::string& filename, int faceset, bool debugOutput) {
 #endif
 }
 
-void Mesh::loadStl(const std::string& filename) {
+void Mesh::loadStl(const string& filename) {
   std::ifstream file(filename.c_str());
-  std::string start;
+  string start;
   file >> start;
   std::cout << "start: " << start << std::endl;
   bool binary = true;
@@ -477,14 +477,14 @@ void Mesh::loadStl(const std::string& filename) {
     file.close();
   } else {
     file.open(filename.c_str());
-    std::string line;
+    string line;
     std::getline(file, line);
     // Skip header
     while (!file.eof() && file.good()) {
       std::getline(file, line);
       line.erase(0, line.find_first_not_of(' '));
       std::stringstream linestream(line);
-      std::string token;
+      string token;
       linestream >> token;
       if (token == "endsolid")
         break;
@@ -564,7 +564,7 @@ void Mesh::loadStl(const std::string& filename) {
   n_original = vertices_.size();
 }
 
-void Mesh::writeOff(const std::string& filename) {
+void Mesh::writeOff(const string& filename) {
   cleanAndRenumber();
 
   std::cout << "Writing off " << filename << std::endl;
@@ -584,7 +584,7 @@ void Mesh::writeOff(const std::string& filename) {
   file.close();
 }
 
-void Mesh::writeObj(const std::string& filename) {
+void Mesh::writeObj(const string& filename) {
   cleanAndRenumber();
   std::cout << "writing obj " << filename << std::endl;
   std::ofstream file(filename.c_str());
@@ -605,7 +605,7 @@ void Mesh::writeObj(const std::string& filename) {
   file.close();
 }
 
-void Mesh::writeWrl(const std::string& filename, bool colored) {
+void Mesh::writeWrl(const string& filename, bool colored) {
   cleanAndRenumber();
 
   std::vector<std::shared_ptr<Mesh>> submeshes = computeSubmeshes();
@@ -613,12 +613,12 @@ void Mesh::writeWrl(const std::string& filename, bool colored) {
   writeMultimeshWrl(submeshes, filename, colored);
 }
 
-void Mesh::writeStl(const std::string& filename, bool binary) {
+void Mesh::writeStl(const string& filename, bool binary) {
   std::cout << "Writing stl" << std::endl;
   cleanAndRenumber();
   if (binary) {
     std::ofstream file(filename.c_str(), std::ios::binary);
-    std::string header("Binary STL " + filename + " created by BoundingMesh");
+    string header("Binary STL " + filename + " created by BoundingMesh");
     header.resize(80);
     file.write(header.c_str(), 80);
     uint32_t num_faces = (uint32_t)triangles_.size();
@@ -745,7 +745,7 @@ std::vector<std::shared_ptr<Mesh>> Mesh::computeSubmeshes() {
 }
 
 void Mesh::writeMultimeshWrl(std::vector<std::shared_ptr<Mesh>> submeshes,
-                             const std::string& filename, bool colored) {
+                             const string& filename, bool colored) {
   std::cout << "Info: Writing wrl " << filename << std::endl;
   if (submeshes.size() == 0) {
     std::cout << "No meshes supplied" << std::endl;
@@ -1243,7 +1243,7 @@ void Mesh::cleanAndRenumber() {
 
 bool Mesh::isDirty() { return dirty_; }
 
-void Mesh::setDebugData(std::string debug_string) { debug_vrml = debug_string; }
+void Mesh::setDebugData(string debug_string) { debug_vrml = debug_string; }
 
 Vector3 Mesh::HSVtoRGB(Vector3 color) {
   Real hh, p, q, t, ff;
