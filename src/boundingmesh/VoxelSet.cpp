@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "VoxelSet.h"
+#include "boundingmesh/VoxelSet.h"
 #include <algorithm>
 #include <cassert>
 #include <fstream>

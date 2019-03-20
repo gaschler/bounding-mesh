@@ -36,7 +36,7 @@
 #ifndef BOUNDINGMESH_FILEUTILS_H
 #define BOUNDINGMESH_FILEUTILS_H
 
-#include <boundingmesh.h>
+#include "boundingmesh/boundingmesh.h"
 #include <memory>
 
 namespace boundingmesh {

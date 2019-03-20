@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "MetricGenerator.h"
+#include "boundingmesh/MetricGenerator.h"
 
 namespace boundingmesh {
 MetricGenerator::MetricGenerator()

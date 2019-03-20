@@ -33,8 +33,8 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <boundingmesh.h>
-#include "../../thirdparty/optionparser.h"
+#include "boundingmesh/boundingmesh.h"
+#include "optionparser/optionparser.h"
 
 #include <iostream>
 #include <sstream>

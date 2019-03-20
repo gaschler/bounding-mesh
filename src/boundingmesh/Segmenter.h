@@ -36,7 +36,7 @@
 #ifndef BOUNDINGMESH_SEGMENTER_H
 #define BOUNDINGMESH_SEGMENTER_H
 
-#include "Mesh.h"
+#include "boundingmesh/Mesh.h"
 
 namespace boundingmesh {
 class Segmenter {

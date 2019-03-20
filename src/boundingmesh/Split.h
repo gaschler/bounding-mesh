@@ -36,8 +36,8 @@
 #ifndef BOUNDINGMESH_SPLIT_H
 #define BOUNDINGMESH_SPLIT_H
 
-#include "Mesh.h"
-#include "VoxelSet.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/VoxelSet.h"
 
 namespace boundingmesh {
 class Split {

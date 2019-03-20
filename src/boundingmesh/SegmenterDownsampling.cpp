@@ -33,8 +33,8 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "SegmenterDownsampling.h"
-#include "Segmenter.h"
+#include "boundingmesh/SegmenterDownsampling.h"
+#include "boundingmesh/Segmenter.h"
 
 #include <math.h>
 #include <fstream>

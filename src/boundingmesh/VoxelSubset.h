@@ -36,9 +36,9 @@
 #ifndef BOUNDINGMESH_VOXELSUBSET_H
 #define BOUNDINGMESH_VOXELSUBSET_H
 
-#include "Mesh.h"
-#include "Split.h"
-#include "VoxelSet.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/Split.h"
+#include "boundingmesh/VoxelSet.h"
 
 namespace boundingmesh {
 class VoxelSubset {

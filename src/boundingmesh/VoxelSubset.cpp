@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "VoxelSubset.h"
+#include "boundingmesh/VoxelSubset.h"
 
 namespace boundingmesh {
 VoxelSubset::VoxelSubset(std::shared_ptr<VoxelSet> voxels)

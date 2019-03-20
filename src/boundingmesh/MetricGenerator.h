@@ -40,7 +40,7 @@
 #include <map>
 #include <memory>
 
-#include "Mesh.h"
+#include "boundingmesh/Mesh.h"
 
 namespace boundingmesh {
 enum Metric {

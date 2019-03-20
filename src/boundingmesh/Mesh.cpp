@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "Mesh.h"
+#include "boundingmesh/Mesh.h"
 #include <stdint.h>
 #include <algorithm>
 #include <fstream>

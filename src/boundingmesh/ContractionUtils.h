@@ -37,7 +37,7 @@
 #define BOUNDINGMESH_CONTRACTIONUTILS_H
 
 #include <set>
-#include "Primitives.h"
+#include "boundingmesh/Primitives.h"
 
 namespace boundingmesh {
 class EdgeContraction {

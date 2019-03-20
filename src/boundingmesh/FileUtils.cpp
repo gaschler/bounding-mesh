@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "FileUtils.h"
+#include "boundingmesh/FileUtils.h"
 #include <iostream>
 
 namespace boundingmesh {

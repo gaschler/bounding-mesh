@@ -36,10 +36,10 @@
 #ifndef BOUNDINGMESH_SEGMENTER_DOWNSAMPLING_H
 #define BOUNDINGMESH_SEGMENTER_DOWNSAMPLING_H
 
-#include "Mesh.h"
-#include "Segmenter.h"
-#include "VoxelSet.h"
-#include "VoxelSubset.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/Segmenter.h"
+#include "boundingmesh/VoxelSet.h"
+#include "boundingmesh/VoxelSubset.h"
 
 namespace boundingmesh {
 

@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "SegmenterSimple.h"
+#include "boundingmesh/SegmenterSimple.h"
 
 #include <math.h>
 #include <iostream>

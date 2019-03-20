@@ -36,11 +36,11 @@
 #ifndef BOUNDINGMESH_SEGMENTER_SIMPLE_H
 #define BOUNDINGMESH_SEGMENTER_SIMPLE_H
 
-#include "Mesh.h"
-#include "Segmenter.h"
-#include "Split.h"
-#include "VoxelSet.h"
-#include "VoxelSubset.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/Segmenter.h"
+#include "boundingmesh/Split.h"
+#include "boundingmesh/VoxelSet.h"
+#include "boundingmesh/VoxelSubset.h"
 
 namespace boundingmesh {
 class SegmenterSimple : public Segmenter {

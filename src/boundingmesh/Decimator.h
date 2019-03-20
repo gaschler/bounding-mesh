@@ -37,9 +37,9 @@
 #define BOUNDINGMESH_DECIMATOR_H
 
 #include <Eigen/StdVector>
-#include "ContractionUtils.h"
-#include "Mesh.h"
-#include "MetricGenerator.h"
+#include "boundingmesh/ContractionUtils.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/MetricGenerator.h"
 
 #include <deque>
 #include <memory>

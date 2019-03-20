@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "Primitives.h"
+#include "boundingmesh/Primitives.h"
 
 namespace boundingmesh {
 // Implementation of class Plane
