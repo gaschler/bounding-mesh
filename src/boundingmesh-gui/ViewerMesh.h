@@ -35,7 +35,7 @@
 
 #include <Inventor/nodes/SoSeparator.h>
 
-#include <boundingmesh.h>
+#include "boundingmesh/boundingmesh.h"
 
 class ViewerMesh {
  public:

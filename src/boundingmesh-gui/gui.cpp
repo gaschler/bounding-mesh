@@ -49,12 +49,12 @@
 #include <QMimeData>
 #include <QUrl>
 
-#include <boundingmesh.h>
-#include "gui.h"
-
 #include <iostream>
 #include <sstream>
-#include "../../thirdparty/optionparser.h"
+
+#include "boundingmesh/boundingmesh.h"
+#include "optionparser/optionparser.h"
+#include "gui.h"
 
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/nodes/SoPolygonOffset.h>

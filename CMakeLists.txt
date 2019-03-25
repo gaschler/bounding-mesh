@@ -39,7 +39,8 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
 
 include_directories(
-	${CMAKE_CURRENT_SOURCE_DIR}/src/boundingmesh
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
 	${EIGEN_INCLUDE_DIRS}
 )
 

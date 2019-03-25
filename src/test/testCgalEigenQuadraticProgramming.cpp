@@ -6,7 +6,7 @@
 #include <sstream>
 #include <vector>
 
-#include <boundingmesh.h>
+#include "boundingmesh/boundingmesh.h"
 using namespace boundingmesh;
 
 #include "../../thirdparty/EigenQP.h"
