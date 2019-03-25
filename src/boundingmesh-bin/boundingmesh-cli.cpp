@@ -35,8 +35,8 @@
 
 // boundingmesh executable
 
-#include <boundingmesh.h>
-#include "../../thirdparty/optionparser.h"
+#include "boundingmesh/boundingmesh.h"
+#include "optionparser/optionparser.h"
 
 #include <iostream>
 #include <sstream>

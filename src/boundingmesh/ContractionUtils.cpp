@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ContractionUtils.h"
+#include "boundingmesh/ContractionUtils.h"
 #include <cassert>
 
 namespace boundingmesh {

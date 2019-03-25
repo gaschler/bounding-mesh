@@ -36,8 +36,8 @@
 #ifndef BOUNDINGMESH_VOXELSET_H
 #define BOUNDINGMESH_VOXELSET_H
 
-#include "Mesh.h"
-#include "Primitives.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/Primitives.h"
 
 #include <memory>
 #include <string>

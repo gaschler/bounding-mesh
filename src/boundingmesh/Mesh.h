@@ -36,7 +36,7 @@
 #ifndef BOUNDINGMESH_MESH_H
 #define BOUNDINGMESH_MESH_H
 
-#include "Primitives.h"
+#include "boundingmesh/Primitives.h"
 
 #include <Eigen/StdVector>
 #include <deque>

@@ -55,8 +55,7 @@
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 
-#include <boundingmesh.h>
-
+#include "boundingmesh/boundingmesh.h"
 #include "ViewerMesh.h"
 
 class CustomLineEdit : public QLineEdit {

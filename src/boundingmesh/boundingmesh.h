@@ -38,12 +38,12 @@
 #ifndef BOUNDINGMESH_H
 #define BOUNDINGMESH_H
 
-#include "Decimator.h"
-#include "FileUtils.h"
-#include "Mesh.h"
-#include "Primitives.h"
-#include "SegmenterDownsampling.h"
-#include "SegmenterSimple.h"
-#include "VoxelSet.h"
+#include "boundingmesh/Decimator.h"
+#include "boundingmesh/FileUtils.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/Primitives.h"
+#include "boundingmesh/SegmenterDownsampling.h"
+#include "boundingmesh/SegmenterSimple.h"
+#include "boundingmesh/VoxelSet.h"
 
 #endif  // BOUNDINGMESH_H

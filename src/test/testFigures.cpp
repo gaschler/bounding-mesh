@@ -33,9 +33,10 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <boundingmesh.h>
 #include <iostream>
 #include <sstream>
+
+#include "boundingmesh/boundingmesh.h"
 
 int main(int argc, char** argv) {
   if (argc != 2) return 1;

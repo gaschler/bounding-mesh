@@ -1352,7 +1352,7 @@ struct Parser::Action {
    * whose Descriptor::check_arg does not return
    * @ref ARG_ILLEGAL.
    *
-   * Returns @c false iff a fatal error has occured and the parse should be
+   * Returns @c false iff a fatal error has occurred and the parse should be
    * aborted.
    */
   virtual bool perform(Option&) { return true; }
@@ -1364,7 +1364,7 @@ struct Parser::Action {
    * > 0).
    *
    * @return
-   * @c false iff a fatal error has occurred.
+   * @c false iff a fatal error has occured.
    */
   virtual bool finished(int numargs, const char** args) {
     (void)numargs;

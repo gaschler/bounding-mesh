@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "Decimator.h"
+#include "boundingmesh/Decimator.h"
 
 #if USE_EIGENQUADPROG
 #include "../../thirdparty/EigenQP.h"

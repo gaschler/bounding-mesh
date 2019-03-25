@@ -33,7 +33,7 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "Split.h"
+#include "boundingmesh/Split.h"
 
 #include <math.h>
 #include <iostream>
