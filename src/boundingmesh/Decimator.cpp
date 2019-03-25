@@ -35,6 +35,10 @@
 
 #include "Decimator.h"
 
+#if USE_EIGENQUADPROG
+#include "../../thirdparty/EigenQP.h"
+#endif  // USE_EIGENQUADPROG
+
 #include <cmath>
 #include <limits>
 // for debugging
