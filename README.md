@@ -83,6 +83,18 @@ Dissertation, Technische Universität München, Munich, Germany, 2016
 [The bounding mesh algorithm](http://www6.in.tum.de/Main/Publications/Gaschler2015d.pdf).
 Technical Report TUM-I1522, Technische Universität München, Germany, June 2015.
 
+### Contribute
+
+Please verify your change builds and tests successfully by
+running the docker build:
+
+```
+docker build -f ubuntu18.Dockerfile .
+```
+
+Then, format syntax with
+`clang-format -style=Google -i src/**/**.cpp src/**/**.h`
+and create a pull request.
 
 ### Screenshots
 
