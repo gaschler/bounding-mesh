@@ -187,54 +187,6 @@ int main(int argc, char** argv) {
       std::cout << "y: " << cost << std::endl;
     }
 
-    {
-      ProfilerScopedTimer p("usual solver with combinatorial subspaces");
-      for (int rep = 0; rep < numRepetitions; ++rep) {
-        // Search for valid minimizer that complies with 0 - 3 constraints
-        bool found = false;
-        Vector3 new_point;
-        Real minimal_cost = std::numeric_limits<Real>::max();
-        int used_m = -1;
-        for (int m = 3; m >= 0; --m) {
-          unsigned int n_subsets = Decimator::nSubsets(m, constraints.size());
-          std::vector<unsigned int> subset;
-          subset.reserve(m);
-          for (unsigned int i = 0; i < m; ++i) subset.push_back(i);
-          for (unsigned int i = 0; i < n_subsets; ++i) {
-            Vector3 result;
-            bool found_valid = Decimator::solveConstrainedMinimization(
-                qem, constraints, subset, DecimationDirection::Outward, result);
-            Vector4 result_homogeneous;
-            result_homogeneous << result, 1;
-            if (found_valid) {
-              found = true;
-              Real new_cost =
-                  result_homogeneous.transpose() * qem * result_homogeneous;
-              if (new_cost < minimal_cost)  // + 1e-16)
-              {
-                minimal_cost = new_cost;
-                new_point = result;
-                used_m = m;
-              }
-            }
-
-            Decimator::nextSubset(subset, constraints.size());
-          }
-        }
-        if (rep == 0) {
-          std::cout << "new_point: " << new_point.transpose() << std::endl;
-          std::cout << "minimal_cost: " << minimal_cost << std::endl;
-          std::cout << "found: " << (found ? "true" : "false") << std::endl;
-
-          Vector4 result_homogeneous;
-          result_homogeneous << new_point, 1;
-          Real new_cost =
-              result_homogeneous.transpose() * qem * result_homogeneous;
-          std::cout << "new_cost: " << new_cost << std::endl;
-        }
-      }
-    }
-
     constraints.push_back(Plane(Vector3(0, 0.01, 1), Vector3(0, 0, 0.1)));
     constraints.push_back(Plane(Vector3(0, 0.02, 1), Vector3(0, 0, 0.1001)));
     constraints.push_back(Plane(Vector3(0, 0.04, 1), Vector3(0, 0, 0.1)));
