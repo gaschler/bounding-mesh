@@ -37,6 +37,7 @@ set(
 	Primitives.cpp
 	SegmenterDownsampling.cpp
 	SegmenterSimple.cpp
+	SimpleOptimizer.cpp
 	Split.cpp
 	VoxelSet.cpp
 	VoxelSubset.cpp
@@ -60,10 +61,12 @@ set(
 	FileUtils.h
 	Mesh.h
 	MetricGenerator.h
+	OptimizerInferface.h
 	Primitives.h
 	Segmenter.h
 	SegmenterDownsampling.h
 	SegmenterSimple.h
+	SimpleOptimizer.h
 	Split.h
 	VoxelSet.h
 	VoxelSubset.h

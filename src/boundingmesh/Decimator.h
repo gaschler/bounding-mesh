@@ -37,12 +37,13 @@
 #define BOUNDINGMESH_DECIMATOR_H
 
 #include <Eigen/StdVector>
+#include <deque>
+#include <memory>
+
 #include "boundingmesh/ContractionUtils.h"
 #include "boundingmesh/Mesh.h"
 #include "boundingmesh/MetricGenerator.h"
-
-#include <deque>
-#include <memory>
+#include "boundingmesh/OptimizerInterface.h"
 
 namespace boundingmesh {
 enum DecimationDirection { Outward, Inward, Any };
@@ -58,6 +59,8 @@ typedef void (*ComputeCallback)(unsigned int, Real);
 class Decimator {
  public:
   Decimator(DecimationDirection direction = Outward);
+  Decimator(std::unique_ptr<OptimizerInterface> optimizer,
+            DecimationDirection direction = Outward);
   ~Decimator();
 
   Real currentError();
@@ -79,18 +82,6 @@ class Decimator {
   std::shared_ptr<Mesh> doContractions(unsigned int n = 1);
   std::shared_ptr<Mesh> compute(ComputeCallback callback = NULL);
 
-  static unsigned int nSubsets(unsigned int subset_size,
-                               unsigned int total_size);
-  static void nextSubset(std::vector<unsigned int>& indices_subset,
-                         unsigned int total_size);
-  static bool solveConstrainedMinimization(
-      const Matrix44& qem, const std::vector<Plane>& constraints,
-      const std::vector<unsigned int>& subset, DecimationDirection direction,
-      Vector3& result);
-  static bool solveConstrainedMinimizationInequalities(
-      const Matrix44& qem, const std::vector<Plane>& constraints,
-      DecimationDirection direction, Vector3& result, Real& result_cost);
-
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
  private:
@@ -109,6 +100,7 @@ class Decimator {
   ContractionQueue queue_;
 
   MetricGenerator metric_generator_;
+  std::unique_ptr<OptimizerInterface> optimizer_;
 
   void executeEdgeContraction(const EdgeContraction& contraction);
   void collectRemovalData(Index vertex_index, Index other_index,
@@ -116,19 +108,6 @@ class Decimator {
                           std::vector<Index*>& hole_border);
 
   EdgeContraction computeEdgeContraction(Index edge_index);
-
-  static Vector3 minimizeSubspace(const Matrix44& qadratic_cost);
-  static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane);
-  static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1,
-                                  Plane plane2);
-  static Vector3 minimizeSubspace(const Matrix44& qadratic_cost, Plane plane1,
-                                  Plane plane2, Plane plane3);
-  Vector3 minimizeLagrange(const Matrix44& qadratic_cost);
-  Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane);
-  Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane1,
-                           Plane plane2);
-  Vector3 minimizeLagrange(const Matrix44& qadratic_cost, Plane plane1,
-                           Plane plane2, Plane plane3);
 };
 }  // namespace boundingmesh
 #endif  // BOUNDINGMESH_DECIMATOR_H
