@@ -84,7 +84,6 @@ if(CGAL_FOUND)
 endif(CGAL_FOUND)
 set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${GMP_LIBRARIES})
 
-
 set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} PARENT_SCOPE)
 
 set_target_properties(
@@ -92,6 +91,13 @@ set_target_properties(
 	PROPERTIES
 	VERSION ${VERSION}
 )
+
+if(GTest_FOUND)
+	include(GoogleTest)
+	add_executable(OptimizerTest OptimizerTest.cpp)
+	target_link_libraries(OptimizerTest boundingmesh gmock gmock_main pthread)
+	gtest_add_tests(TARGET OptimizerTest)
+endif(GTest_FOUND)
 
 install(
 	FILES ${HDRS} 
