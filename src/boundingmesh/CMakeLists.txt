@@ -28,13 +28,27 @@ include_directories(
 )
 
 set(
-	SRCS
+	BOUNDINGMESH_SRCS
 	ContractionUtils.cpp
 	Decimator.cpp
 	FileUtils.cpp
 	Mesh.cpp
 	MetricGenerator.cpp
 	Primitives.cpp
+)
+
+if(USE_EIGENQUADPROG)
+	list(APPEND BOUNDINGMESH_SRCS ../../thirdparty/EigenQP.cpp)
+endif()
+
+add_library(
+	boundingmesh
+	STATIC
+	${BOUNDINGMESH_SRCS}
+)
+
+set(
+	BOUNDINGMESHDECOMPOSITION_SRCS
 	SegmenterDownsampling.cpp
 	SegmenterSimple.cpp
 	SimpleOptimizer.cpp
@@ -43,18 +57,19 @@ set(
 	VoxelSubset.cpp
 )
 
-if(USE_EIGENQUADPROG)
-	list(APPEND SRCS ../../thirdparty/EigenQP.cpp)
-endif()
-
 add_library(
-	boundingmesh
+	boundingmeshdecomposition
 	STATIC
-	${SRCS}
+	${BOUNDINGMESHDECOMPOSITION_SRCS}
+)
+
+target_link_libraries(
+    boundingmeshdecomposition
+    boundingmesh
 )
 
 set(
-	HDRS
+	BOUNDINGMESH_HDRS
 	boundingmesh.h
 	ContractionUtils.h
 	Decimator.h
@@ -72,7 +87,7 @@ set(
 	VoxelSubset.h
 )
 
-set(BOUNDINGMESH_LIBRARIES boundingmesh)
+set(BOUNDINGMESH_LIBRARIES boundingmesh boundingmeshdecomposition)
 
 if(COIN_FOUND)
 	set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${COIN_LIBRARIES})
@@ -99,12 +114,25 @@ if(GTest_FOUND)
 	gtest_add_tests(TARGET OptimizerTest)
 endif(GTest_FOUND)
 
+set_target_properties(
+	boundingmeshdecomposition
+	PROPERTIES
+	VERSION ${VERSION}
+)
+
 install(
-	FILES ${HDRS} 
+	FILES ${BOUNDINGMESH_HDRS}
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(
 	TARGETS boundingmesh
+	EXPORT boundingmesh-export
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(
+	TARGETS boundingmeshdecomposition
 	EXPORT boundingmesh-export
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
