@@ -33,11 +33,14 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "boundingmesh/boundingmesh.h"
-#include "optionparser/optionparser.h"
-
 #include <iostream>
 #include <sstream>
+
+#include "boundingmesh/Decimator.h"
+#include "boundingmesh/FileUtils.h"
+#include "boundingmesh/Mesh.h"
+#include "boundingmesh/SegmenterDownsampling.h"
+#include "optionparser/optionparser.h"
 
 option::ArgStatus checkInt(const option::Option& option, bool msg) {
   char* endptr = 0;

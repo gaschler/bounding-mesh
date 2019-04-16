@@ -50,7 +50,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 add_subdirectory(src/boundingmesh)
 add_subdirectory(src/boundingmesh-bin)
 add_subdirectory(src/boundingmesh-gui)
-add_subdirectory(src/test)
 
 install(
 	FILES

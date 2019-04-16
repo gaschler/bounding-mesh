@@ -33,6 +33,9 @@
 //THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <Inventor/Qt/SoQt.h>
+#include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
+
 #include <QAction>
 #include <QCheckBox>
 #include <QDockWidget>
@@ -48,15 +51,13 @@
 #include <QSpacerItem>
 #include <QString>
 #include <QVBoxLayout>
-
 #include <memory>
 #include <string>
 
-#include <Inventor/Qt/SoQt.h>
-#include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
-
-#include "boundingmesh/boundingmesh.h"
 #include "ViewerMesh.h"
+#include "boundingmesh/Decimator.h"
+#include "boundingmesh/FileUtils.h"
+#include "boundingmesh/Mesh.h"
 
 class CustomLineEdit : public QLineEdit {
   Q_OBJECT

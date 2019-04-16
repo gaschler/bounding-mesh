@@ -33,13 +33,13 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// boundingmesh executable
-
-#include "boundingmesh/boundingmesh.h"
-#include "optionparser/optionparser.h"
-
 #include <iostream>
 #include <sstream>
+
+#include "boundingmesh/Decimator.h"
+#include "boundingmesh/FileUtils.h"
+#include "boundingmesh/Mesh.h"
+#include "optionparser/optionparser.h"
 
 option::ArgStatus checkDirection(const option::Option& option, bool msg) {
   char in[] = "Inward";
