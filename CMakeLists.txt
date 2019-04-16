@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.2)
 
 enable_testing()
 include(GNUInstallDirs)
@@ -7,6 +7,9 @@ include(CheckCXXCompilerFlag)
 project(boundingmesh)
 set(VERSION 0.2)
 add_definitions(-DBOUNDINGMESH_VERSION="${VERSION}")
+
+find_package(GTest)
+cmake_policy(SET CMP0057 NEW)
 
 option(BOUNDINGMESH_VECTORIZE "use faster vectorized math (recommended unless build fails with Eigen errors)" ON)
 if(NOT ${BOUNDINGMESH_VECTORIZE})

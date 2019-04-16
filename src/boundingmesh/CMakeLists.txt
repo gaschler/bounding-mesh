@@ -107,6 +107,13 @@ set_target_properties(
 	VERSION ${VERSION}
 )
 
+if(GTest_FOUND)
+	include(GoogleTest)
+	add_executable(OptimizerTest OptimizerTest.cpp)
+	target_link_libraries(OptimizerTest boundingmesh gmock gmock_main pthread)
+	gtest_add_tests(TARGET OptimizerTest)
+endif(GTest_FOUND)
+
 set_target_properties(
 	boundingmeshdecomposition
 	PROPERTIES

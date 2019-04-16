@@ -342,8 +342,8 @@ bool solveConstrainedMinimizationInequalities(
     const Matrix44& qem, const std::vector<Plane>& constraints,
     DecimationDirection direction, Vector3& result, Real& result_cost) {
 #if USE_EIGENQUADPROG
-  Eigen::MatrixXd G = qem.topLeftCorner<3, 3>();
-  Eigen::VectorXd g0 = qem.topRightCorner<3, 1>();
+  Eigen::MatrixXd G = 2 * qem.topLeftCorner<3, 3>();
+  Eigen::VectorXd g0 = 2 * qem.topRightCorner<3, 1>();
   Eigen::MatrixXd CE = Eigen::MatrixXd::Zero(3, 0);
   Eigen::VectorXd ce0 = Eigen::VectorXd::Zero(0);
   Eigen::MatrixXd CI(3, constraints.size());
@@ -353,20 +353,17 @@ bool solveConstrainedMinimizationInequalities(
     ci0(i) = constraints[i].d;
   }
   Eigen::VectorXd x(3);
+  Real cost;
   try {
-    // TODO: check for inequalities and return false sometimes
-    QP::solve_quadprog(G, g0, CE, ce0, CI, ci0, x);
+    cost = QP::solve_quadprog(G, g0, CE, ce0, CI, ci0, x);
   } catch (const ::std::logic_error& e) {
     return false;
   }
-
-  // result_cost = (x.transpose() * G * x)(0, 0) + 2 * (g0.transpose() * x)(0,
-  // 0) + qem(3, 3);
-  Vector4 result_homogeneous;
-  result_homogeneous << x, 1;
-  result_cost = result_homogeneous.transpose() * qem * result_homogeneous;
+  if (cost == std::numeric_limits<Real>::infinity()) {
+    return false;
+  }
+  result_cost = cost + qem(3, 3);
   result = x;
-
   return true;
 #else
   // Search for valid minimizer that complies with 0 - 3 constraints

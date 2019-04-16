@@ -35,16 +35,22 @@
 
 FROM ubuntu:18.04
 RUN apt-get update && \
-    apt-get install -y sudo nano build-essential cmake ninja-build \
+    apt-get install -y sudo nano build-essential cmake ninja-build wget \
         libeigen3-dev libcgal-dev libcoin80-dev \
-        libqt4-dev libqt4-opengl-dev libsoqt4-dev libqhull-dev && \
+        libqt4-dev libqt4-opengl-dev libsoqt4-dev libqhull-dev \
+        libpthread-stubs0-dev && \
     rm -rf /var/lib/apt/lists/*
+RUN wget https://github.com/google/googletest/archive/release-1.8.0.tar.gz
+RUN tar -xzf release-1.8.0.tar.gz && \
+    cd googletest-release-1.8.0 && \
+    mkdir -p build && cd build && \
+    cmake .. && make -j8 && make install
 COPY . /src/
-RUN mkdir /build
+RUN mkdir /build && \
+    cd /build && \
+    cmake -DCMAKE_BUILD_TYPE="RelWithDebInfo" -GNinja /src
 RUN cd /build && \
-    cmake -DCMAKE_BUILD_TYPE="RelWithDebInfo" -GNinja /src && \
-    ninja -j4
-# Exclude failing, unrelated test.
+    ninja -j8
 RUN cd /build && \
-    ctest --verbose --exclude-regex testCgal*
+    ctest --verbose
 
