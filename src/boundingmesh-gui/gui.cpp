@@ -33,9 +33,14 @@
 // THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "gui.h"
+
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/Qt/SoQtGLWidget.h>
+#include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/nodes/SoMaterial.h>
+#include <Inventor/nodes/SoPolygonOffset.h>
+
 #include <QApplication>
 #include <QCoreApplication>
 #include <QDateTime>
@@ -48,16 +53,10 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QUrl>
-
 #include <iostream>
 #include <sstream>
 
-#include "boundingmesh/boundingmesh.h"
 #include "optionparser/optionparser.h"
-#include "gui.h"
-
-#include <Inventor/actions/SoGetBoundingBoxAction.h>
-#include <Inventor/nodes/SoPolygonOffset.h>
 
 int minimal_vertices = 50;
 int number_decimate_many = 100;

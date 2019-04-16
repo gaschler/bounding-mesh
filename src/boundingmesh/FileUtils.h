@@ -36,8 +36,9 @@
 #ifndef BOUNDINGMESH_FILEUTILS_H
 #define BOUNDINGMESH_FILEUTILS_H
 
-#include "boundingmesh/boundingmesh.h"
 #include <memory>
+
+#include "boundingmesh/Mesh.h"
 
 namespace boundingmesh {
 enum FileFormat { Invalid, Off, Obj, Stl, Wrl };

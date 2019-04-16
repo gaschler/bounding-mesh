@@ -33,7 +33,7 @@ target_link_libraries(
 	${BOUNDINGMESH_LIBRARIES}
 )
 
-add_dependencies(bounding-convex-decomposition boundingmesh)
+add_dependencies(bounding-convex-decomposition boundingmesh boundingmeshdecomposition)
 
 add_test(testBoundingConvexDecompositionBunny ${CMAKE_BINARY_DIR}/bounding-convex-decomposition -x 20000 "${CMAKE_SOURCE_DIR}/examples/bunny/bunny.off" "${CMAKE_BINARY_DIR}/bunny_decomposition.wrl")
 add_test(testBoundingConvexDecompositionTeapot ${CMAKE_BINARY_DIR}/bounding-convex-decomposition "${CMAKE_SOURCE_DIR}/examples/teapot/teapot.off" "${CMAKE_BINARY_DIR}/teapot_decomposition.wrl")

@@ -35,7 +35,9 @@
 
 #include <Inventor/nodes/SoSeparator.h>
 
-#include "boundingmesh/boundingmesh.h"
+#include "boundingmesh/Decimator.h"
+#include "boundingmesh/FileUtils.h"
+#include "boundingmesh/Mesh.h"
 
 class ViewerMesh {
  public:
