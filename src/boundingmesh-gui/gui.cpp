@@ -415,12 +415,6 @@ void MainWindow::dropEvent(QDropEvent *event) {
 MainWindow::MainWindow(QWidget *parent, QApplication *app)
     : app(app),
       viewer(NULL),
-      mesh(NULL),
-      original_mesh(NULL),
-      decimator(NULL),
-      direction(boundingmesh::Outward),
-      metric(boundingmesh::Average),
-      initialization(boundingmesh::Midpoint),
       using_error_restriction_(true) {
   SoQt::init(this);
   SoDB::init();

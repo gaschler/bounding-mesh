@@ -47,28 +47,13 @@
 
 namespace boundingmesh {
 Decimator::Decimator(DecimationDirection direction)
-    : target_vertices_(default_target_vertices),
-      target_vertices_used_(false),
-      maximum_error_(default_maximum_error),
-      maximum_error_used_(false),
-      direction_(direction),
-      current_error_(-1),
-      queue_(),
-      result_mesh_(NULL),
-      metric_generator_(),
-      optimizer_(new SimpleOptimizer) {}
+    : direction_(direction), optimizer_(new SimpleOptimizer) {}
 
 Decimator::Decimator(std::unique_ptr<OptimizerInterface> optimizer,
                      DecimationDirection direction)
     : target_vertices_(default_target_vertices),
-      target_vertices_used_(false),
       maximum_error_(default_maximum_error),
-      maximum_error_used_(false),
       direction_(direction),
-      current_error_(-1),
-      queue_(),
-      result_mesh_(NULL),
-      metric_generator_(),
       optimizer_(std::move(optimizer)) {}
 
 Decimator::~Decimator() {}

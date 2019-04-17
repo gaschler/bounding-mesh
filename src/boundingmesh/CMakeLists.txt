@@ -35,6 +35,7 @@ set(
 	Mesh.cpp
 	MetricGenerator.cpp
 	Primitives.cpp
+	SimpleOptimizer.cpp
 )
 
 if(USE_EIGENQUADPROG)
@@ -51,7 +52,6 @@ set(
 	BOUNDINGMESHDECOMPOSITION_SRCS
 	SegmenterDownsampling.cpp
 	SegmenterSimple.cpp
-	SimpleOptimizer.cpp
 	Split.cpp
 	VoxelSet.cpp
 	VoxelSubset.cpp

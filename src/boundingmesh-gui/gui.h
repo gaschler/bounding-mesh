@@ -83,10 +83,11 @@ class MainWindow : public QMainWindow {
   ::std::shared_ptr<boundingmesh::Mesh> mesh;
   ::std::shared_ptr<boundingmesh::Mesh> original_mesh;
   ::std::shared_ptr<boundingmesh::Decimator> decimator;
-  boundingmesh::DecimationDirection direction;
-  boundingmesh::Metric metric;
-  boundingmesh::Initialization initialization;
+  boundingmesh::DecimationDirection direction = boundingmesh::Outward;
+  boundingmesh::Metric metric = boundingmesh::Average;
+  boundingmesh::Initialization initialization = boundingmesh::Midpoint;
 
+  QApplication *app;
   SoQtExaminerViewer *viewer;
   SoGroup *scene_graph;
   ::std::shared_ptr<ViewerMesh> viewer_mesh;
@@ -131,8 +132,6 @@ class MainWindow : public QMainWindow {
   void dropEvent(QDropEvent *event);
 
  private:
-  QApplication *app;
-
   QRadioButton *radio_outer;
   QRadioButton *radio_any;
   QRadioButton *radio_inner;

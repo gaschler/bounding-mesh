@@ -542,21 +542,7 @@ void VoxelSubset::writeWRL(std::string filename, bool debugTriangles) {
   file << "}";
 }
 
-SegmenterDownsampling::SegmenterDownsampling()
-    : passes_(32),
-      maximum_concavity_(0.001),
-      initial_volume_(1),
-      initial_size_(1),
-      voxel_size_(1),
-      alpha_(0.05),
-      beta_(0.05),
-      gamma_(0.0005),
-      delta_(0.05),
-      convexhull_downsampling_(1),
-      plane_downsampling_(4),
-      heuristic_(1),
-      debug_(false),
-      superDebug_(false) {}
+SegmenterDownsampling::SegmenterDownsampling() {}
 
 void SegmenterDownsampling::setMaximumConcavity(Real maximum_concavity) {
   maximum_concavity_ = maximum_concavity;
@@ -1070,8 +1056,11 @@ std::vector<VoxelSubset> SegmenterDownsampling::mergeConvexHulls(
     }
 
     while (iterate) {
-      size_t bestp1;
-      size_t bestp2;
+      if (parts.empty()) {
+        continue;
+      }
+      size_t bestp1 = 0;
+      size_t bestp2 = 0;
       double bestCost = MAX_Real;  // initial_volume_;
       for (size_t p1 = 0; p1 < parts.size() - 1; ++p1) {
         double volume1 = parts[p1].convexVolume();

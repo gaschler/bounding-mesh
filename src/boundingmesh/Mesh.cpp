@@ -136,19 +136,7 @@ Index VertexPositionSet::addVertex(const Vector3& position) {
 }
 
 // Implementation of class Mesh
-Mesh::Mesh()
-    : n_valid_vertices_(0),
-      n_valid_edges_(0),
-      n_valid_triangles_(0),
-      vertices_(),
-      edges_(),
-      triangles_(),
-      dirty_(false),
-      deleted_vertices_(),
-      deleted_edges_(),
-      deleted_triangles_(),
-      n_original(0),
-      debug_vrml() {}
+Mesh::Mesh() {}
 
 Mesh::Mesh(const Mesh& mesh) {
   vertices_ = std::deque<Vertex>(mesh.vertices_);
