@@ -64,8 +64,8 @@ class VertexPosition {
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
  private:
-  Index index_;
   Vector3 position_;
+  Index index_;
   bool searching_;
 };
 
@@ -150,10 +150,10 @@ class Mesh {
   Index registerEdge(Index vertex1, Index vertex2, Index triangle);
 
   // Lazy removal of vertices/triangles
-  bool dirty_;
-  unsigned int n_valid_vertices_;
-  unsigned int n_valid_edges_;
-  unsigned int n_valid_triangles_;
+  bool dirty_ = false;
+  unsigned int n_valid_vertices_ = 0;
+  unsigned int n_valid_edges_ = 0;
+  unsigned int n_valid_triangles_ = 0;
   std::stack<Index> deleted_vertices_;
   std::stack<Index> deleted_edges_;
   std::stack<Index> deleted_triangles_;
@@ -161,7 +161,7 @@ class Mesh {
   friend class MetricGenerator;
 
   // Debug data
-  unsigned int n_original;
+  unsigned int n_original = 0;
   std::string debug_vrml;
 
   // For multipart-output

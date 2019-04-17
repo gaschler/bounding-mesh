@@ -84,8 +84,8 @@ class MetricGenerator {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
  private:
   void initialize();
-  Metric metric_;
-  Initialization initialization_;
+  Metric metric_ = ClassicQEM;
+  Initialization initialization_ = Midpoint;
   ::std::shared_ptr<Mesh> mesh_;
 
   // General

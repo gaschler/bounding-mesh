@@ -36,8 +36,7 @@
 #include "boundingmesh/MetricGenerator.h"
 
 namespace boundingmesh {
-MetricGenerator::MetricGenerator()
-    : mesh_(NULL), metric_(ClassicQEM), initialization_(Midpoint) {}
+MetricGenerator::MetricGenerator() {}
 
 MetricGenerator::~MetricGenerator() {}
 
@@ -936,4 +935,4 @@ void MetricGenerator::shrinkIndexedArray(MatrixArray* array,
   }
   array->swap(new_array);
 }
-}
+}  // namespace boundingmesh

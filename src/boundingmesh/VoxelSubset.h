@@ -86,10 +86,11 @@ class VoxelSubset {
   std::shared_ptr<VoxelSet> const& getVoxels() const;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
  private:
   std::vector<Index> indices_;
-  std::vector<AppliedSplit> splits_;
   std::shared_ptr<VoxelSet> voxels_;
+  std::vector<AppliedSplit> splits_;
 
   Vector3 bounding_box_min_;
   Vector3 bounding_box_max_;

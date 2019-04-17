@@ -88,19 +88,18 @@ class Decimator {
   void recomputeQueue();
   void cleanAndRenumber();
 
-  unsigned int target_vertices_;
-  bool target_vertices_used_;
-  Real maximum_error_;
-  bool maximum_error_used_;
+  unsigned int target_vertices_ = default_target_vertices;
+  bool target_vertices_used_ = false;
+  Real maximum_error_ = default_maximum_error;
+  bool maximum_error_used_ = false;
   DecimationDirection direction_;
+  MetricGenerator metric_generator_;
+  std::unique_ptr<OptimizerInterface> optimizer_;
 
-  Real current_error_;
+  Real current_error_ = -1;
   std::shared_ptr<Mesh> result_mesh_;
 
   ContractionQueue queue_;
-
-  MetricGenerator metric_generator_;
-  std::unique_ptr<OptimizerInterface> optimizer_;
 
   void executeEdgeContraction(const EdgeContraction& contraction);
   void collectRemovalData(Index vertex_index, Index other_index,

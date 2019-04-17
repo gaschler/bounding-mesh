@@ -48,7 +48,9 @@ RUN tar -xzf release-1.8.0.tar.gz && \
 COPY . /src/
 RUN mkdir /build && \
     cd /build && \
-    cmake -DCMAKE_BUILD_TYPE="RelWithDebInfo" -GNinja /src
+    cmake -GNinja -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+        -DMORE_COMPILE_ERRORS=On \
+        /src
 RUN cd /build && \
     ninja -j8
 RUN cd /build && \

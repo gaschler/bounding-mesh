@@ -78,23 +78,23 @@ class SegmenterDownsampling {
   }
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
  private:
-  int passes_;
-  Real maximum_concavity_;
-  int heuristic_;
-  bool debug_;
-  bool superDebug_;
+  int passes_ = 32;
+  Real maximum_concavity_ = 0.001;
+  int heuristic_ = 1;
+  bool debug_ = false;
+  bool superDebug_ = false;
+  Real voxel_size_ = 1;
+  Real alpha_ = 0.05;
+  Real beta_ = 0.05;
+  Real gamma_ = 0.0005;
+  Real delta_ = 0.05;
+  int convexhull_downsampling_ = 1;
+  int plane_downsampling_ = 4;
+  Real initial_volume_ = 1;
+  Real initial_size_ = 1;
 
-  Real voxel_size_;
-  Real alpha_;
-  Real beta_;
-  Real gamma_;
-  Real delta_;
-  int convexhull_downsampling_;
-  int plane_downsampling_;
-
-  Real initial_volume_;
-  Real initial_size_;
   Real initial_surface_voxels_;
   Vector3 initial_area_;
 
