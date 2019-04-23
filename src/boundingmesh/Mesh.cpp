@@ -956,7 +956,7 @@ Index Mesh::registerEdge(Index vertex1, Index vertex2, Index triangle) {
   assert(triangle < triangles_.size());
   // Adds edge between vertex1 and vertex2 belonging to triangle.
   // returns index of edge
-  // for easy comparison, all edges satisfy egde.vertices[0] < egde.vertices[1]
+  // for easy comparison, all edges satisfy edge.vertices[0] < edge.vertices[1]
   Index first_vertex = vertex1;
   Index second_vertex = vertex2;
   if (vertex1 > vertex2) {

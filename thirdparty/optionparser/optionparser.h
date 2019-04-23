@@ -563,7 +563,7 @@ class Option {
 
   /**
    * @brief Returns the number of times this Option (or others with the same
-   * Descriptor::index) occurs in the argument vector.
+   * Descriptor::index) occurrs in the argument vector.
    *
    * This corresponds to the number of elements in the linked list this Option
    * is part of. It doesn't matter on which element you call count(). The return
@@ -1107,7 +1107,7 @@ class Parser {
    * that Option's Descriptor::index. If an entry is not yet used (i.e. the
    * Option is invalid), it will be replaced rather than appended to. @n The
    * minimum length of this array is the greatest Descriptor::index value that
-   *                occurs in @c usage @e PLUS ONE.
+   *                occurrs in @c usage @e PLUS ONE.
    * @param buffer Each argument that is successfully parsed (including unknown
    * arguments, if they have a Descriptor whose CheckArg does not return @ref
    * ARG_ILLEGAL) will be stored in this array. parse() scans the array for the
@@ -1225,7 +1225,7 @@ class Parser {
   const char* nonOption(int i) { return nonOptions()[i]; }
 
   /**
-   * @brief Returns @c true if an unrecoverable error occurred while parsing
+   * @brief Returns @c true if an unrecoverable error occurrred while parsing
    * options.
    *
    * An illegal argument to an option (i.e. CheckArg returns @ref ARG_ILLEGAL)
@@ -1251,7 +1251,7 @@ class Parser {
   /**
    * @internal
    * @brief This is the core function that does all the parsing.
-   * @retval false iff an unrecoverable error occurred.
+   * @retval false iff an unrecoverable error occurrred.
    */
   static bool workhorse(bool gnu, const Descriptor usage[], int numargs,
                         const char** args, Action& action,
@@ -1352,7 +1352,7 @@ struct Parser::Action {
    * whose Descriptor::check_arg does not return
    * @ref ARG_ILLEGAL.
    *
-   * Returns @c false iff a fatal error has occurred and the parse should be
+   * Returns @c false iff a fatal error has occurrred and the parse should be
    * aborted.
    */
   virtual bool perform(Option&) { return true; }
@@ -1364,7 +1364,7 @@ struct Parser::Action {
    * > 0).
    *
    * @return
-   * @c false iff a fatal error has occured.
+   * @c false iff a fatal error has occurrred.
    */
   virtual bool finished(int numargs, const char** args) {
     (void)numargs;
@@ -2166,7 +2166,7 @@ struct PrintUsageImplementation {
      * buffer to free up space. The contract of process() says that only 1 line
      * is output. So this variable is used to track whether something has output
      * a line. It is reset at the beginning of process() and checked at the end
-     * to decide if output has already occurred or is still needed.
+     * to decide if output has already occurrred or is still needed.
      */
     bool wrote_something;
 

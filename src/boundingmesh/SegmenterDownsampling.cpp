@@ -161,7 +161,7 @@ VoxelSubset VoxelSubset::merge(VoxelSubset other) {
   return ret;
 }
 
-// Partitions the given voxel subset into two parts according the the provided
+// Partitions the given voxel subset into two parts according the provided
 // split
 // This also calculates the convex hulls for both new parts
 std::vector<VoxelSubset> VoxelSubset::partitionVoxel(Split split) {

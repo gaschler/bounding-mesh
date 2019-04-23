@@ -409,7 +409,7 @@ An edge of a mesh. Contains references to it's endpoints and the triangles it is
 
 
 ##### `class Triangle`
-A triangle of a mesh. Keeps references of it's vertices and edges. Also provides the plane containing the triangle in space.
+A triangle of a mesh. Keeps references of its vertices and edges. Also provides the plane containing the triangle in space.
 
 *   `Triangle()`  
     Creates an empty triangle.
