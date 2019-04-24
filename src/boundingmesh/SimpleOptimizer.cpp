@@ -46,9 +46,11 @@ namespace boundingmesh {
 namespace {
 
 unsigned int nSubsets(unsigned int subset_size, unsigned int total_size) {
+  if (subset_size > total_size) return 0;
+  // Compute binomial coefficient "total_size over subset_size".
   unsigned int result = 1;
-  for (unsigned int i = 0; i < subset_size; ++i)
-    result *= (total_size - i) / (i + 1);
+  for (unsigned int i = 0; i < subset_size; ++i) result *= total_size - i;
+  for (unsigned int i = 0; i < subset_size; ++i) result /= i + 1;
   return result;
 }
 
@@ -157,100 +159,6 @@ Vector3 minimizeSubspace(const Matrix44& quadratic_cost, Plane plane1,
   return result;
 }
 
-Vector3 minimizeLagrange(const Matrix44& quadratic_cost) {
-  Eigen::Matrix<Real, 4, 1> linear_constraints;
-  linear_constraints << 0, 0, 0, 1;
-  Eigen::Matrix<Real, 4 + 1, 1> b;
-  b << 0, 0, 0, 0, 1;
-  Eigen::Matrix<Real, 4 + 1, 4 + 1> A;
-  A << quadratic_cost, linear_constraints, linear_constraints.transpose(), 0;
-
-  Eigen::Matrix<Real, 4 + 1, 1> x;
-  x = A.fullPivLu().solve(b);
-
-  // check if solution is valid
-  if ((A * x - b).topRows(3).norm() > 1e-4) {
-    // std::cout << "Debug verbose: QEM minimum without constraints: Lagrange
-    // seems not invertible" << std::endl;
-    return Vector3::Zero();
-  }
-  if (std::abs(x(3) - 1) > 1e-4) {
-    // std::cout << "Debug verbose: QEM minimum without constraints: violates
-    // Lagrange constraints, skipping" << std::endl;
-    return Vector3::Zero();
-  }
-
-  Vector3 result = x.topRows(3);
-  return result;
-}
-
-Vector3 minimizeLagrange(const Matrix44& quadratic_cost, Plane plane) {
-  Eigen::Matrix<Real, 6, 6> A = Eigen::Matrix<Real, 6, 6>::Zero();
-  A.topLeftCorner(4, 4) = quadratic_cost;
-  A.col(4).topRows(3) = plane.normal;
-  A.row(4).leftCols(3) = plane.normal.transpose();
-  A(3, 5) = A(5, 3) = 1;
-  Eigen::Matrix<Real, 6, 1> b, x;
-  b << 0, 0, 0, 0, -plane.d, 1;
-  x = A.fullPivLu().solve(b);
-
-  if (std::abs(x(3) - 1) > 1e-4) {
-    // std::cout << "Debug verbose: m=1: violates Lagrange constraints,
-    // skipping" << std::endl;
-    return Vector3::Zero();
-  }
-
-  if (std::abs(x.topRows(3).transpose() * plane.normal + plane.d) > epsilon) {
-    // std::cout << "Debug: m=1: Minimizer is not on plane" << std::endl;
-    return Vector3::Zero();
-  }
-  Vector3 result = x.topRows(3);
-  return result;
-}
-
-Vector3 minimizeLagrange(const Matrix44& quadratic_cost, Plane plane1,
-                         Plane plane2) {
-  Eigen::Matrix<Real, 4, 3> linear_constraints =
-      Eigen::Matrix<Real, 4, 3>::Zero();
-  linear_constraints.col(0).topRows(3) = plane1.normal;
-  linear_constraints.col(1).topRows(3) = plane2.normal;
-  linear_constraints(3, 2) = 1;
-  Eigen::Matrix<Real, 4 + 3, 1> b;
-  b << 0, 0, 0, 0, -plane1.d, -plane2.d, 1;
-  Eigen::Matrix<Real, 4 + 3, 4 + 3> A;
-  A << quadratic_cost, linear_constraints, linear_constraints.transpose(),
-      Eigen::Matrix<Real, 3, 3>::Zero();
-  Eigen::Matrix<Real, 4 + 3, 1> x;
-  x = A.fullPivLu().solve(b);
-
-  // check if solution is valid
-  if ((A * x - b).topRows(3).norm() > 1e-4) {
-    // std::cout << "Debug verbose: m=2: Lagrange seems not invertible" <<
-    // std::endl;
-    return Vector3::Zero();
-  }
-  if (std::abs(x(3) - 1) > 1e-4) {
-    // std::cout << "Debug verbose: m=2: violates Lagrange constraints,
-    // skipping" << std::endl;
-    return Vector3::Zero();
-  }
-
-  if (std::abs(x.topRows(3).transpose() * plane1.normal + plane1.d) > epsilon ||
-      std::abs(x.topRows(3).transpose() * plane2.normal + plane2.d) > epsilon) {
-    // std::cout << "Debug: m=2: Lagrange minimizer is not on edge (p,q)." <<
-    // std::endl;
-    return Vector3::Zero();
-  }
-
-  Vector3 result = x.topRows(3);
-  return result;
-}
-
-Vector3 minimizeLagrange(const Matrix44& quadratic_cost, Plane plane1,
-                         Plane plane2, Plane plane3) {
-  return minimizeSubspace(quadratic_cost, plane1, plane2, plane3);
-}
-
 bool solveConstrainedMinimization(const Matrix44& qem,
                                   const std::vector<Plane>& constraints,
                                   const std::vector<unsigned int>& subset,
@@ -281,40 +189,7 @@ bool solveConstrainedMinimization(const Matrix44& qem,
       assert(false);
   }
 
-#define CHECK_LAGRANGE_SOLUTION 0
-#if CHECK_LAGRANGE_SOLUTION
-  // Compare to Lagrange multiplier solution
-  Vector3 result_lagrange = Vector3::Zero();
-  switch (subset.size()) {
-    case 0:
-      result_lagrange = minimizeLagrange(qem);
-      break;
-    case 1:
-      result_lagrange = minimizeLagrange(qem, constraints[subset[0]]);
-      break;
-    case 2:
-      result_lagrange =
-          minimizeLagrange(qem, constraints[subset[0]], constraints[subset[1]]);
-      break;
-    case 3:
-      result_lagrange =
-          minimizeLagrange(qem, constraints[subset[0]], constraints[subset[1]],
-                           constraints[subset[2]]);
-      break;
-    default:
-      assert(false);
-  }
-
-  if ((result_lagrange - result_position).norm() > 1e-3) {
-    std::cout << "Debug: Direct QEM minimizer differs from Lagrange solution: "
-              << "Subspace result: " << result_position.transpose() << std::endl
-              << "Lagrange result: " << result_lagrange.transpose()
-              << std::endl;
-  } else {
-    std::cout << "Debug: m=0: direct QEM minimizer equals Lagrange solution"
-              << std::endl;
-  }
-#endif
+  if (!result_position.array().allFinite()) return false;
 
   // Check if minimizer fulfills all constraints
   Vector4 result_homogeneous;
