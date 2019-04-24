@@ -1364,7 +1364,7 @@ struct Parser::Action {
    * > 0).
    *
    * @return
-   * @c false iff a fatal error has occured.
+   * @c false iff a fatal error has occurred.
    */
   virtual bool finished(int numargs, const char** args) {
     (void)numargs;
