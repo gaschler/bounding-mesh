@@ -72,21 +72,20 @@ target_link_libraries(
 
 set(
 	BOUNDINGMESH_HDRS
-	boundingmesh.h
-	ContractionUtils.h
-	Decimator.h
-	FileUtils.h
-	Mesh.h
-	MetricGenerator.h
-	OptimizerInferface.h
-	Primitives.h
-	Segmenter.h
-	SegmenterDownsampling.h
-	SegmenterSimple.h
-	SimpleOptimizer.h
-	Split.h
-	VoxelSet.h
-	VoxelSubset.h
+	${CMAKE_CURRENT_SOURCE_DIR}/ContractionUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Decimator.h
+	${CMAKE_CURRENT_SOURCE_DIR}/FileUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Mesh.h
+	${CMAKE_CURRENT_SOURCE_DIR}/MetricGenerator.h
+	${CMAKE_CURRENT_SOURCE_DIR}/OptimizerInterface.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Primitives.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Segmenter.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SegmenterDownsampling.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SegmenterSimple.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SimpleOptimizer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Split.h
+	${CMAKE_CURRENT_SOURCE_DIR}/VoxelSet.h
+	${CMAKE_CURRENT_SOURCE_DIR}/VoxelSubset.h
 )
 
 set(BOUNDINGMESH_LIBRARIES boundingmesh boundingmeshdecomposition)
