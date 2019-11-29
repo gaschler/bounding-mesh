@@ -4,6 +4,7 @@ find_package(Eigen 3 REQUIRED)
 find_package(Coin)
 find_package(CGAL)
 find_package(GMP)
+find_package(MPFR)
 
 set(BOUNDINGMESH_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
 
@@ -16,7 +17,8 @@ if (CGAL_FOUND)
 	add_definitions(-DCGAL_AVAILABLE -DCGAL_DISABLE_ROUNDING_MATH_CHECK)
 	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${CGAL_INCLUDE_DIRS})
 	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
-	#set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${GMP_INCLUDE_DIR})
+	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${GMP_INCLUDE_DIR})
+	set(BOUNDINGMESH_INCLUDE_DIRS ${BOUNDINGMESH_INCLUDE_DIRS} ${MPFR_INCLUDE_DIR})
 else(CGAL_FOUND)
 	message("Not building bounding convex decomposition, would need CGAL library.")	
 endif(CGAL_FOUND)
@@ -70,21 +72,20 @@ target_link_libraries(
 
 set(
 	BOUNDINGMESH_HDRS
-	boundingmesh.h
-	ContractionUtils.h
-	Decimator.h
-	FileUtils.h
-	Mesh.h
-	MetricGenerator.h
-	OptimizerInferface.h
-	Primitives.h
-	Segmenter.h
-	SegmenterDownsampling.h
-	SegmenterSimple.h
-	SimpleOptimizer.h
-	Split.h
-	VoxelSet.h
-	VoxelSubset.h
+	${CMAKE_CURRENT_SOURCE_DIR}/ContractionUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Decimator.h
+	${CMAKE_CURRENT_SOURCE_DIR}/FileUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Mesh.h
+	${CMAKE_CURRENT_SOURCE_DIR}/MetricGenerator.h
+	${CMAKE_CURRENT_SOURCE_DIR}/OptimizerInterface.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Primitives.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Segmenter.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SegmenterDownsampling.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SegmenterSimple.h
+	${CMAKE_CURRENT_SOURCE_DIR}/SimpleOptimizer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Split.h
+	${CMAKE_CURRENT_SOURCE_DIR}/VoxelSet.h
+	${CMAKE_CURRENT_SOURCE_DIR}/VoxelSubset.h
 )
 
 set(BOUNDINGMESH_LIBRARIES boundingmesh boundingmeshdecomposition)
