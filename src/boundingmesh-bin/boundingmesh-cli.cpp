@@ -221,27 +221,11 @@ int main(int argc, char** argv) {
   }
 
   boundingmesh::Mesh mesh;
-  boundingmesh::FileFormat file_format_in = boundingmesh::Invalid;
   boundingmesh::FileFormat file_format_out = boundingmesh::Invalid;
 
-  file_format_in = boundingmesh::getFileFormat(filename_in);
   file_format_out = boundingmesh::getFileFormat(filename_out);
 
-  if (file_format_in == boundingmesh::Off)
-    mesh.loadOff(filename_in);
-  else if (file_format_in == boundingmesh::Obj)
-    mesh.loadObj(filename_in);
-  else if (file_format_in == boundingmesh::Wrl) {
-    if (options[WHICH_FACESET])
-      mesh.loadWrl(filename_in, atoi(options[WHICH_FACESET].arg));
-    else
-      mesh.loadWrl(filename_in);
-  } else if (file_format_in == boundingmesh::Stl)
-    mesh.loadStl(filename_in);
-  else {
-    std::cout << "Couldn't load " << filename_in << std::endl;
-    return 1;
-  }
+  mesh.loadFile(filename_in);
 
   boundingmesh::Decimator decimator(direction);
   if (options[TARGET_VERTICES]) {

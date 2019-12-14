@@ -63,19 +63,10 @@ std::shared_ptr<boundingmesh::Mesh> loadMesh(std::string filename,
   std::shared_ptr<boundingmesh::Mesh> mesh =
       std::make_shared<boundingmesh::Mesh>();
 
-  file_format = getFileFormat(filename);
-  if (file_format == Off)
-    mesh->loadOff(filename);
-  else if (file_format == Obj)
-    mesh->loadObj(filename);
-  else if (file_format == Wrl)
-    mesh->loadWrl(filename, -1, debugOutput);
-  else if (file_format == Stl)
-    mesh->loadStl(filename);
-  else {
-    std::cout << "Couldn't load mesh from " << filename << std::endl;
+  bool loadSuccess = mesh->loadFile(filename);
+  if (!loadSuccess) {
     return NULL;
   }
   return mesh;
 }
-}
+}  // namespace boundingmesh

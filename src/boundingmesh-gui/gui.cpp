@@ -130,37 +130,22 @@ void MainWindow::loadView() {
 
 bool MainWindow::openFile(const std::string &filename_in) {
   mesh.reset(new boundingmesh::Mesh);
-  boundingmesh::FileFormat file_format_in = boundingmesh::Invalid;
-  file_format_in = boundingmesh::getFileFormat(filename_in);
-  if (file_format_in == boundingmesh::Off)
-    mesh->loadOff(filename_in);
-  else if (file_format_in == boundingmesh::Obj)
-    mesh->loadObj(filename_in);
-  else if (file_format_in == boundingmesh::Wrl)
-    mesh->loadWrl(filename_in);
-  else if (file_format_in == boundingmesh::Stl)
-    mesh->loadStl(filename_in);
-  else {
-    QMessageBox::warning(this, "Bad File Format", "File type cannot be read.",
-                         QMessageBox::Ok);
-    return false;
-  }
+  mesh->loadFile(filename_in);
   loadView();
   return true;
 }
 
 void MainWindow::clickOpen() {
-  std::string filename_in =
-      QFileDialog::getOpenFileName(this, "Open 3D Mesh", QDir::currentPath(),
-                                   "*.wrl *.obj *.off *.stl")
-          .toStdString();
+  std::string filename_in = QFileDialog::getOpenFileName(
+                                this, "Open 3D Mesh", QDir::currentPath(), "*")
+                                .toStdString();
   if (filename_in == "") return;
   openFile(filename_in);
 }
 
 void MainWindow::clickOpenExample(const std::string &file_name) {
   mesh.reset(new boundingmesh::Mesh);
-  mesh->loadOff(file_name);
+  mesh->loadFile(file_name);
   if (mesh->nVertices() == 0) {
     QMessageBox::warning(this, "Bad Example File",
                          QString("File %1 cannot be read.")
@@ -413,9 +398,7 @@ void MainWindow::dropEvent(QDropEvent *event) {
 #include <QtOpenGL/QGLWidget>
 
 MainWindow::MainWindow(QWidget *parent, QApplication *app)
-    : app(app),
-      viewer(NULL),
-      using_error_restriction_(true) {
+    : app(app), viewer(NULL), using_error_restriction_(true) {
   SoQt::init(this);
   SoDB::init();
 

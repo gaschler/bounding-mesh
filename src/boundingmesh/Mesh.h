@@ -101,11 +101,7 @@ class Mesh {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   // Loading/Saving files
-  void loadOff(const std::string& filename);
-  void loadObj(const std::string& filename);
-  void loadWrl(const std::string& filename, int faceset = -1,
-               bool debugOutput = true);
-  void loadStl(const std::string& filename);
+  bool loadFile(const std::string& filename);
   void writeOff(const std::string& filename);
   void writeObj(const std::string& filename);
   void writeWrl(const std::string& filename, bool colored = false);
