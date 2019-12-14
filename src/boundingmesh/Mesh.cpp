@@ -44,6 +44,10 @@
 #include <cassert>
 #include <iostream>
 
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+
 // Use coin to load .wrl files if available
 #ifdef COIN_AVAILABLE
 #include <Inventor/SoDB.h>
@@ -69,9 +73,9 @@
 
 #ifdef CGAL_AVAILABLE
 #include "CGAL/Cartesian.h"
-#include "CGAL/convex_hull_3.h"
 #include "CGAL/Exact_predicates_inexact_constructions_kernel.h"
 #include "CGAL/Polyhedron_3.h"
+#include "CGAL/convex_hull_3.h"
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 // typedef CGAL::Cartesian<double>  K;
@@ -189,367 +193,37 @@ void swap(Mesh& first, Mesh& second) {
   std::swap(first.debug_vrml, second.debug_vrml);
 }
 
-void Mesh::loadOff(const std::string& filename) {
-  std::ifstream file(filename.c_str());
-  std::string line;
-  int state = 0;
-  unsigned int n_vertices = 0;
-  unsigned int n_faces = 0;
-  unsigned int n_edges = 0;
-  while (!file.eof() && file.good()) {
-    std::getline(file, line);
-    line.erase(0, line.find_first_not_of(' '));
-    line.erase(line.find_last_not_of(" \n\r\t") + 1);
-    if (line.size() == 0) continue;
-    if (line.at(0) == '#') continue;
+bool Mesh::loadFile(const std::string& fileName) {
+  Assimp::Importer importer;
 
-    std::stringstream sstream(line);
-    Real x, y, z;
-    Index a, b, c;
+  const aiScene* scene = importer.ReadFile(
+      fileName, aiProcess_CalcTangentSpace | aiProcess_Triangulate |
+                    aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 
-    int n_face_vertices;
-
-    switch (state) {
-      case 0:  // Reading Preamble
-        if (line == "OFF")
-          state = 1;
-        else {
-          std::cout << "Error reading .off file: first line is bad:"
-                    << line.length() << (int)line.at(3) << std::endl;
-          return;
-        }
-        break;
-      case 1:  // Reading vertex/face count
-        sstream >> n_vertices >> n_faces >> n_edges;
-        if (n_vertices == 0 || n_faces == 0) {
-          std::cout << "Error reading .off file: Vertex/face count is zero"
-                    << std::endl;
-          return;
-        }
-        state = 2;
-        break;
-      case 2:                    // Reading vertices
-        sstream >> x >> y >> z;  // Only read position, ignore color if existent
-        addVertex(Vector3(x, y, z));
-
-        if (vertices_.size() == n_vertices) state = 3;
-        break;
-      case 3:  // Reading faces
-        sstream >> n_face_vertices;
-        if (n_face_vertices < 3) {
-          std::cerr
-              << "Error reading .off file: Reading face with 2 or less vertices"
-              << std::endl;
-          clean();
-          return;
-        } else if (n_face_vertices == 3) {
-          sstream >> a >> b >>
-              c;  // Only read geometric information, ignore color if existent
-          if (a > vertices_.size() || b > vertices_.size() ||
-              c > vertices_.size())
-            std::cout << "Error reading .off file: invalid index" << std::endl;
-          addTriangle(a, b, c);
-        } else {
-          std::cout << "Error reading .off file: Reading face with more than 3 "
-                       "vertices"
-                    << std::endl;
-        }
-        break;
-      default:
-        std::cout << "Error reading .off file: Broken reading state"
-                  << std::endl;
-        clean();
-        return;
-    }
-  }
-  n_original = vertices_.size();
-  if (vertices_.size() != n_vertices || triangles_.size() != n_faces) {
-    std::cerr << "Error reading .off file: Vertex/face count is incorrect"
-              << std::endl;
-    clean();
-    return;
-  }
-}
-
-void Mesh::loadObj(const std::string& filename) {
-  std::ifstream file(filename.c_str());
-  std::string line;
-
-  Real x, y, z;
-  std::string a_str, b_str, c_str;
-  Index a, b, c;
-
-  while (!file.eof() && file.good()) {
-    std::getline(file, line);
-    if (line.size() == 0) continue;
-    if (line.at(0) == '#') continue;
-    std::stringstream linestream(line);
-    std::string mode;
-    linestream >> mode;
-    if (mode == "v") {
-      // Reading vertex
-      linestream >> x >> y >> z;  // Only read position, ignore color if
-                                  // existent
-      addVertex(Vector3(x, y, z));
-    } else if (mode == "f") {
-      // Reading face
-      linestream >> a_str >> b_str >>
-          c_str;  // Only read geometric information, ignore color if existent
-      // if(linestream.rdbuf()->in_avail() != 0)
-      //	std::cout << "Error reading .obj file: Reading face with more
-      // than 3 vertices" << std::endl;
-      std::stringstream component_stream(a_str);
-      std::getline(component_stream, a_str, '/');
-      component_stream.str(b_str);
-      std::getline(component_stream, b_str, '/');
-      component_stream.str(c_str);
-      std::getline(component_stream, c_str, '/');
-      a = std::atoi(a_str.c_str()) - 1;
-      b = std::atoi(b_str.c_str()) - 1;
-      c = std::atoi(c_str.c_str()) - 1;
-
-      if (a > vertices_.size() || b > vertices_.size() || c > vertices_.size())
-        std::cout << "Error reading .off file: invalid index" << std::endl;
-      addTriangle(a, b, c);
-    }
-  }
-  n_original = vertices_.size();
-}
-
-#ifdef COIN_AVAILABLE
-struct CallbackData {
-  Mesh* mesh;
-  VertexPositionSet* vertices;
-
-  SbMatrix* matrix;
-};
-
-void triangleCallback(void* userData, SoCallbackAction* action,
-                      const SoPrimitiveVertex* v1, const SoPrimitiveVertex* v2,
-                      const SoPrimitiveVertex* v3) {
-  CallbackData* data = static_cast<CallbackData*>(userData);
-
-  SbMatrix* matrix = data->matrix;
-  VertexPositionSet* vertices = data->vertices;
-  Mesh* mesh = data->mesh;
-
-  SbVec3f points[3];
-
-  matrix->multVecMatrix(v1->getPoint(), points[0]);
-  matrix->multVecMatrix(v2->getPoint(), points[1]);
-  matrix->multVecMatrix(v3->getPoint(), points[2]);
-
-  Index indices[3];
-  for (unsigned int i = 0; i < 3; ++i) {
-    Vector3 position;
-    position << points[i][0], points[i][1], points[i][2];
-    indices[i] = vertices->addVertex(position);
-  }
-  if (indices[0] == indices[1] || indices[0] == indices[2] ||
-      indices[1] == indices[2]) {
-#ifndef NDEBUG
-    std::cout << "Skipping degenerate triangle " << indices[0] << ", "
-              << indices[1] << ", " << indices[2] << std::endl;
-#endif
-  } else
-    mesh->addTriangle(indices[0], indices[1], indices[2]);
-}
-#endif
-
-void Mesh::loadWrl(const std::string& filename, int faceset, bool debugOutput) {
-#ifndef COIN_AVAILABLE
-  std::cout << "Coin required, can't load .wrl." << std::endl;
-#else
-  SoDB::init();
-
-  SoGroup* root;
-  SoInput input;
-  if (!input.openFile(filename.c_str(), true)) {
-    std::cout << "Error: File not found." << std::endl;
-    exit(-1);
-  } else {
-    root = SoDB::readAll(&input);
+  if (!scene) {
+    std::cerr << "Assimp load failed" << std::endl;
+    std::cerr << importer.GetErrorString() << std::endl;
+    return false;
   }
 
-  input.closeFile();
-  if (NULL == root) {
-    std::cerr << "Error: Could not read file." << std::endl;
-    exit(-1);
-  }
+  int currentIndexFace = 0;
 
-  root->ref();
-
-  SbViewportRegion viewportRegion;
-  SoSearchAction searchAction;
-  searchAction.setInterest(SoSearchAction::ALL);
-  searchAction.setType(SoShape::getClassTypeId());
-  searchAction.apply(root);
-
-  CallbackData cb_data;
-  cb_data.mesh = this;
-
-  if (debugOutput) {
-    std::cout << "Note: VRML contains " << searchAction.getPaths().getLength()
-              << " facesets." << std::endl;
-  }
-  for (int i = 0; i < searchAction.getPaths().getLength(); ++i) {
-    if (faceset != -1 && i != faceset) continue;
-
-    SoGetMatrixAction* getMatrixAction = new SoGetMatrixAction(viewportRegion);
-    getMatrixAction->apply(searchAction.getPaths()[i]);
-    SbMatrix matrix = getMatrixAction->getMatrix();
-
-    VertexPositionSet vertices(this);
-    cb_data.vertices = &vertices;
-    cb_data.matrix = &matrix;
-
-    SoCallbackAction callbackAction;
-    callbackAction.addTriangleCallback(SoShape::getClassTypeId(),
-                                       triangleCallback, &cb_data);
-    callbackAction.apply(searchAction.getPaths()[i]);
-  }
-#endif
-}
-
-void Mesh::loadStl(const std::string& filename) {
-  std::ifstream file(filename.c_str());
-  std::string start;
-  file >> start;
-  std::cout << "start: " << start << std::endl;
-  bool binary = true;
-  if (start == "solid") binary = false;
-  file.close();
-
-  VertexPositionSet vertices(this);
-  if (binary) {
-    std::cout << "loading binary" << std::endl;
-    if (sizeof(float) != 4) {
-      std::cout << "Using floats with bad size. abort." << std::endl;
-      return;
+  for (int meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex ++ ){
+    const aiMesh* sceneLoadedMesh = scene->mMeshes[meshIndex];  
+    for (int i = 0; i < sceneLoadedMesh->mNumVertices; i++){
+      const aiVector3D* pPos = &(sceneLoadedMesh->mVertices[i]);
+      addVertex(Vector3(pPos->x, pPos->y, pPos->z)); 
     }
 
-    file.open(filename.c_str(), std::ios::binary);
-    file.seekg(80, file.beg);
-    uint32_t num_faces;
-    file.read((char*)&num_faces, 4);
-    while (!file.eof() && file.good()) {
-      float x, y, z;
-      file.read((char*)&x, 4);
-      file.read((char*)&y, 4);
-      file.read((char*)&z, 4);
-      Vector3 normal;
-      normal << x, y, z;
-      Index indices[3];
-      for (unsigned int i = 0; i < 3; ++i) {
-        file.read((char*)&x, 4);
-        file.read((char*)&y, 4);
-        file.read((char*)&z, 4);
-        Vector3 position;
-        position << x, y, z;
-        indices[i] = vertices.addVertex(position);
-      }
-      Vector3 v0v1 =
-          vertex(indices[1]).position() - vertex(indices[0]).position();
-      Vector3 v0v2 =
-          vertex(indices[2]).position() - vertex(indices[0]).position();
-      Vector3 computed_normal = v0v1.cross(v0v2).normalized();
-      if (std::abs(computed_normal.dot(normal) - 1) > normal_epsilon) {
-        //	std::cout << "Overriding bad normal: " << normal.transpose() <<
-        //" computed " << computed_normal.transpose() << std::endl;
-      }
-      if (!(indices[0] == indices[1] || indices[0] == indices[2] ||
-            indices[1] == indices[2]))
-        addTriangle(indices[0], indices[1], indices[2]);
-      file.seekg(2, file.cur);
+    for (int i = 0 ; i < sceneLoadedMesh->mNumFaces; i++){
+      const aiFace& Face = sceneLoadedMesh->mFaces[i];
+      addTriangle(Face.mIndices[0] + currentIndexFace, Face.mIndices[1] + currentIndexFace, Face.mIndices[2] + currentIndexFace); 
     }
-    file.close();
-  } else {
-    file.open(filename.c_str());
-    std::string line;
-    std::getline(file, line);
-    // Skip header
-    while (!file.eof() && file.good()) {
-      std::getline(file, line);
-      line.erase(0, line.find_first_not_of(' '));
-      std::stringstream linestream(line);
-      std::string token;
-      linestream >> token;
-      if (token == "endsolid")
-        break;
-      else if (token == "facet") {
-        linestream >> token;
-        if (token != "normal") {
-          std::cout << "Bad stl file: expected \"normal\"" << std::endl;
-          break;
-        }
-        float x, y, z;
-        Vector3 normal;
-        linestream >> x >> y >> z;
-        normal << x, y, z;
-        std::getline(file, line);
-        line.erase(0, line.find_first_not_of(' '));
-        if (line != "outer loop") {
-          std::cout << "Bad stl file: expected \"outer loop\", got " << line
-                    << std::endl;
-          break;
-        }
-        Index indices[3];
-        for (unsigned int i = 0; i < 3; ++i) {
-          std::getline(file, line);
-          line.erase(0, line.find_first_not_of(' '));
-          linestream.str();
-          linestream.clear();
-          linestream.str(line);
-          linestream >> token;
-          if (token != "vertex") {
-            std::cout << "bad stl file: expected \"vertex\" got " << token
-                      << std::endl;
-            break;
-          }
-          linestream >> x >> y >> z;
-          Vector3 position;
-          position << x, y, z;
-          indices[i] = vertices.addVertex(position);
-        }
-        Vector3 v0v1 =
-            vertex(indices[1]).position() - vertex(indices[0]).position();
-        Vector3 v0v2 =
-            vertex(indices[2]).position() - vertex(indices[0]).position();
-        Vector3 computed_normal = v0v1.cross(v0v2).normalized();
-        if (std::abs(computed_normal.dot(normal) - 1) > normal_epsilon) {
-          std::cout << "Overriding bad normal: " << normal.transpose()
-                    << " computed " << computed_normal.transpose() << std::endl;
-        }
-
-        if (indices[0] == indices[1] || indices[0] == indices[2] ||
-            indices[1] == indices[2])
-          std::cout << "Skipping degenerate triangle " << indices[0] << ", "
-                    << indices[1] << ", " << indices[2] << std::endl;
-        else
-          addTriangle(indices[0], indices[1], indices[2]);
-        std::getline(file, line);
-        line.erase(0, line.find_first_not_of(' '));
-        if (line != "endloop") {
-          std::cout << "bad stl file: expected \"endloop\", got " << line
-                    << std::endl;
-          break;
-        }
-        std::getline(file, line);
-        line.erase(0, line.find_first_not_of(' '));
-        if (line != "endfacet") {
-          std::cout << "bad stl file: expected \"endfacet\", got " << line
-                    << std::endl;
-          break;
-        }
-      } else {
-        std::cout << "bad stl file: expected \"facet\" or \"endsolid\", got "
-                  << token << std::endl;
-        break;
-      }
-    }
-    file.close();
+    currentIndexFace += sceneLoadedMesh->mNumVertices; 
   }
-  n_original = vertices_.size();
+
+  std::cerr << currentIndexFace;
+  return true;
 }
 
 void Mesh::writeOff(const std::string& filename) {
@@ -1426,4 +1100,4 @@ double Convex::ComputeVolume() {
   }
   return totalVolume / 6.0;
 }
-}
+}  // namespace boundingmesh

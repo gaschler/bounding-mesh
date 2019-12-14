@@ -173,4 +173,4 @@ Real SegmenterSimple::evaluateSubset(const VoxelSubset& subset) {
   // Real val = subset.evaluate();
   return 1;
 }
-}
+}  // namespace boundingmesh

@@ -4,8 +4,13 @@ find_package(Eigen 3 REQUIRED)
 find_package(Coin)
 find_package(CGAL)
 find_package(GMP)
+find_package(assimp)
 
 set(BOUNDINGMESH_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+
+set(ASSIMP_LIBRARY "assimp")
+add_library(${ASSIMP_LIBRARY} SHARED IMPORTED)
+set_target_properties(${ASSIMP_LIBRARY} PROPERTIES IMPORTED_LOCATION "${ASSIMP_LIBRARY_DIRS}/libassimp.so")
 
 if(COIN_FOUND)
 	add_definitions(-DCOIN_AVAILABLE -DCOIN_NOT_DLL)
@@ -89,6 +94,8 @@ set(
 
 set(BOUNDINGMESH_LIBRARIES boundingmesh boundingmeshdecomposition)
 
+target_link_libraries(boundingmesh ${ASSIMP_LIBRARY})
+
 if(COIN_FOUND)
 	set(BOUNDINGMESH_LIBRARIES ${BOUNDINGMESH_LIBRARIES} ${COIN_LIBRARIES})
 endif(COIN_FOUND)
@@ -124,6 +131,7 @@ install(
 	FILES ${BOUNDINGMESH_HDRS}
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
 install(
 	TARGETS boundingmesh
 	EXPORT boundingmesh-export
@@ -153,6 +161,7 @@ export(
 	TARGETS boundingmesh
 	FILE ${CMAKE_CURRENT_BINARY_DIR}/boundingmesh-export.cmake
 )
+
 install(
 	EXPORT boundingmesh-export
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}
