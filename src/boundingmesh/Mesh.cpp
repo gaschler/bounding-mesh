@@ -1037,6 +1037,9 @@ void Mesh::closeHoles() {
                 quit = true;
               }
               break;
+            } 
+            else if (j == v.edges_.size()-1){
+              quit = true;
             }
           }
           if (currentHoleEdges.size() > 10000) {
